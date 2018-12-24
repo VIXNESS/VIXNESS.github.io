@@ -122,7 +122,7 @@
 <meta property="og:image" content="http://meolin.net/images/model_1.png">
 <meta property="og:image" content="http://meolin.net/images/model_3.png">
 <meta property="og:image" content="http://meolin.net/images/model_4.png">
-<meta property="og:updated_time" content="2018-12-24T10:36:48.063Z">
+<meta property="og:updated_time" content="2018-12-24T10:38:12.340Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PM2.5 预测">
 <meta name="twitter:description" content="使用Linear Regression 对PM2.5进行预测数据集 training data testing data: features testing data: label Training data 和 Public testing data 的组织形式: 一天由18行组成,一行为一个指标,一共由18个指标,从第4列开始记录每个指标一天内24小时的变化数值,每个月连续记录前20天作为tr">
@@ -443,7 +443,7 @@
                 
               
 
-              <time title="创建时间：2018-12-24 15:26:00 / 修改时间：18:36:48" itemprop="dateCreated datePublished" datetime="2018-12-24T15:26:00+08:00">2018-12-24</time>
+              <time title="创建时间：2018-12-24 15:26:00 / 修改时间：18:38:12" itemprop="dateCreated datePublished" datetime="2018-12-24T15:26:00+08:00">2018-12-24</time>
             
 
             
@@ -665,7 +665,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">t = np.dot(x,w)</span><br><span class="line">L = t - y</span><br><span class="line">loss = []</span><br><span class="line">sum = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> l <span class="keyword">in</span> L:</span><br><span class="line">    loss.append(abs(l))</span><br><span class="line">    sum += abs(l)</span><br><span class="line">print(sum / len(L))</span><br><span class="line">plt.plot(y,color = <span class="string">"red"</span>,label = <span class="string">'target'</span>)</span><br><span class="line">plt.plot(t,color = <span class="string">"blue"</span>,label = <span class="string">'hypothesis'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'pm 2.5'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 <h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="/images/model_1.png" alt="结论"></p>
 <blockquote>
-<p>PM2.5 误差 <strong>14.427</strong><br>参数太多,过拟合了 //之后再给出training时候的loss,太慢了,真·跑一万下</p>
+<p>PM2.5 误差 <strong>14.427</strong><br>参数太多,<del>过拟合了</del> 是没有训练好,卡在了某个地方了,training时候的loss也很高 //之后再给出training时候的loss,太慢了,真·跑一万下</p>
 </blockquote>
 <h2 id="再优化"><a href="#再优化" class="headerlink" title="再优化"></a>再优化</h2><blockquote>
 <p>只取18个特征中的NMHC、NO2、O3、PM10、PM2.5</p>
