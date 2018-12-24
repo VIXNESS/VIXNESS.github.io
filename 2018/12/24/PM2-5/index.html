@@ -118,15 +118,20 @@
 <meta property="og:site_name" content="喵灵">
 <meta property="og:description" content="使用Linear Regression 对PM2.5进行预测数据集 training data testing data: samples testing data: label Training data 和 Public testing data 的组织形式: 一天由18行组成,一行为一个指标,一共由18个指标,从第4列开始记录每个指标一天内24小时的变化数值,每个月连续记录前20天作为tra">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://meolin.net/images/model_1.png">
-<meta property="og:image" content="http://meolin.net/images/model_1.png">
-<meta property="og:image" content="http://meolin.net/images/model_3.png">
-<meta property="og:image" content="http://meolin.net/images/model_4.png">
-<meta property="og:updated_time" content="2018-12-24T11:11:21.910Z">
+<meta property="og:image" content="http://meolin.net/images/PM25/model_1.png">
+<meta property="og:image" content="http://meolin.net/images/PM25/model_1.png">
+<meta property="og:image" content="http://meolin.net/images/PM25/model_3.png">
+<meta property="og:image" content="http://meolin.net/images/PM25/model_4.png">
+<meta property="og:image" content="http://meolin.net/images/PM25/loss.png">
+<meta property="og:image" content="http://meolin.net/images/PM25/dnn.png">
+<meta property="og:image" content="http://meolin.net/images/PM25/non_fs.png">
+<meta property="og:image" content="http://meolin.net/images/PM25/non_fs_rs.png">
+<meta property="og:image" content="http://meolin.net/images/PM25/3layers_loss.png">
+<meta property="og:updated_time" content="2018-12-24T11:45:36.058Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PM2.5 预测">
 <meta name="twitter:description" content="使用Linear Regression 对PM2.5进行预测数据集 training data testing data: samples testing data: label Training data 和 Public testing data 的组织形式: 一天由18行组成,一行为一个指标,一共由18个指标,从第4列开始记录每个指标一天内24小时的变化数值,每个月连续记录前20天作为tra">
-<meta name="twitter:image" content="http://meolin.net/images/model_1.png">
+<meta name="twitter:image" content="http://meolin.net/images/PM25/model_1.png">
 
 
 
@@ -443,7 +448,7 @@
                 
               
 
-              <time title="创建时间：2018-12-24 15:26:00 / 修改时间：19:11:21" itemprop="dateCreated datePublished" datetime="2018-12-24T15:26:00+08:00">2018-12-24</time>
+              <time title="创建时间：2018-12-24 15:26:00 / 修改时间：19:45:36" itemprop="dateCreated datePublished" datetime="2018-12-24T15:26:00+08:00">2018-12-24</time>
             
 
             
@@ -665,30 +670,70 @@
 <li>测试</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">t = np.dot(x,w)</span><br><span class="line">L = t - y</span><br><span class="line">loss = []</span><br><span class="line">sum = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> l <span class="keyword">in</span> L:</span><br><span class="line">    loss.append(abs(l))</span><br><span class="line">    sum += abs(l)</span><br><span class="line">print(sum / len(L))</span><br><span class="line">plt.plot(y,color = <span class="string">"red"</span>,label = <span class="string">'target'</span>)</span><br><span class="line">plt.plot(t,color = <span class="string">"blue"</span>,label = <span class="string">'hypothesis'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'pm 2.5'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="/images/model_1.png" alt="结论"></p>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="/images/PM25/model_1.png" alt="结论"></p>
 <blockquote>
-<p>PM2.5 误差 <strong>14.427</strong><br>参数太多,<del>过拟合了</del> 是没有训练好,卡在了某个地方了,training时候的loss也很高 //之后再给出training时候的loss,太慢了,真·跑一万下</p>
+<p>PM2.5 误差 <strong>14.427</strong><br><del>参数太多过拟合</del>没有训练好,卡在了某个地方了,training时候的loss也很高</p>
 </blockquote>
 <h2 id="再优化"><a href="#再优化" class="headerlink" title="再优化"></a>再优化</h2><blockquote>
 <p>只取18个特征中的NMHC、NO2、O3、PM10、PM2.5</p>
 </blockquote>
-<p><img src="/images/model_1.png" alt="model_2"></p>
+<p><img src="/images/PM25/model_1.png" alt="model_2"></p>
 <blockquote>
 <p>PM2.5 误差 <strong>8.987</strong><br>一个不错的开头,继续优化</p>
 <p>只考虑PM 10和PM 2.5</p>
 </blockquote>
-<p><img src="/images/model_3.png" alt="model_3"></p>
+<p><img src="/images/PM25/model_3.png" alt="model_3"></p>
 <blockquote>
 <p>PM2.5 误差 <strong>6.281</strong></p>
 </blockquote>
 <blockquote>
 <p>若在删减特征呢?<br>只考虑 PM2.5 </p>
 </blockquote>
-<p><img src="/images/model_4.png" alt="model_4"></p>
+<p><img src="/images/PM25/model_4.png" alt="model_4"></p>
 <blockquote>
 <p>PM2.5 误差 <strong>5.406</strong><br>我服了,之前做的时候是会underfitting导致误差到7.4的,这回倒好更加低了</p>
 </blockquote>
-<h1 id="使用Deep-Learning-对PM2-5进行预测"><a href="#使用Deep-Learning-对PM2-5进行预测" class="headerlink" title="使用Deep Learning 对PM2.5进行预测"></a>使用Deep Learning 对PM2.5进行预测</h1>
+<h1 id="使用DNN-对PM2-5进行预测"><a href="#使用DNN-对PM2-5进行预测" class="headerlink" title="使用DNN 对PM2.5进行预测"></a>使用DNN 对PM2.5进行预测</h1><blockquote>
+<p>使用的是tensorflow + keras<br>预备工作略</p>
+</blockquote>
+<h2 id="Feature-Scaling"><a href="#Feature-Scaling" class="headerlink" title="Feature Scaling"></a>Feature Scaling</h2><blockquote>
+<p>用了两个不同的Feature Scaling的方法,结果上看差别不大,Standardization更加好一点</p>
+</blockquote>
+<h3 id="Standardization"><a href="#Standardization" class="headerlink" title="Standardization"></a>Standardization</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">standardization</span><span class="params">(dataMatrix)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> dataMatrix.shape[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> dataMatrix</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(dataMatrix.shape[<span class="number">1</span>]):</span><br><span class="line">        sum = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> _x <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            sum += _x[i]</span><br><span class="line">        mean = sum / dataMatrix.shape[<span class="number">0</span>]</span><br><span class="line">        SD = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> _x <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            SD += (_x[i] - mean)**<span class="number">2</span></span><br><span class="line">        SD = np.sqrt(SD / dataMatrix.shape[<span class="number">0</span>])</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">for</span> _x <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            _x[i] = (_x[i] - mean) / SD</span><br><span class="line">    <span class="keyword">return</span> dataMatrix</span><br></pre></td></tr></table></figure>
+<h3 id="Mean-Normalization"><a href="#Mean-Normalization" class="headerlink" title="Mean Normalization"></a>Mean Normalization</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">meanNormalization</span><span class="params">(dataMatrix)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> dataMatrix.shape[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> dataMatrix</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(dataMatrix.shape[<span class="number">1</span>]):</span><br><span class="line">        sum = <span class="number">0</span></span><br><span class="line">        max = <span class="number">0</span></span><br><span class="line">        min = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> data <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            sum += data[i]</span><br><span class="line">            <span class="keyword">if</span> data[i] &gt; max:</span><br><span class="line">                max = data[i]</span><br><span class="line">            <span class="keyword">if</span> data[i] &lt; min:</span><br><span class="line">                min = data[i]</span><br><span class="line">        mean = sum / dataMatrix.shape[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> (max - min) != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">for</span> data <span class="keyword">in</span> dataMatrix:</span><br><span class="line">                data[i] = (data[i] - mean) / (max - min)</span><br><span class="line">    <span class="keyword">return</span> dataMatrix</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">trainX = standardization(trainX)</span><br><span class="line">testX = standardization(testX)</span><br><span class="line"><span class="comment"># trainX = meanNormalization(trainX)</span></span><br><span class="line"><span class="comment"># testX = meanNormalization(testX)</span></span><br></pre></td></tr></table></figure>
+<h2 id="训练-1"><a href="#训练-1" class="headerlink" title="训练"></a>训练</h2><blockquote>
+<p>使用output为8的两层layer,激活函数是ReLU(Sigmoid效果更加差)</p>
+</blockquote>
+<h3 id="建立模型"><a href="#建立模型" class="headerlink" title="建立模型"></a>建立模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">model = keras.Sequential([</span><br><span class="line">    keras.layers.Dense(<span class="number">8</span>, activation=tf.nn.relu),</span><br><span class="line">    keras.layers.Dense(<span class="number">8</span>, activation=tf.nn.relu),</span><br><span class="line">    keras.layers.Dense(<span class="number">1</span>)</span><br><span class="line">    ])</span><br><span class="line">model.compile(loss=<span class="string">"mse"</span>,</span><br><span class="line">        optimizer=tf.train.RMSPropOptimizer(<span class="number">0.001</span>),</span><br><span class="line">        metrics=[<span class="string">'mae'</span>, <span class="string">'mse'</span>])</span><br></pre></td></tr></table></figure>
+<h3 id="训练-2"><a href="#训练-2" class="headerlink" title="训练"></a>训练</h3><blockquote>
+<p>跑100个epochs基本上没什么变化了<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">history = model.fit(trainX, </span><br><span class="line">                    trainY, </span><br><span class="line">                    batch_size = <span class="number">64</span>, </span><br><span class="line">                    epochs = <span class="number">100</span>, </span><br><span class="line">                    validation_split = <span class="number">0.2</span>, </span><br><span class="line">                    verbose=<span class="number">0</span>, </span><br><span class="line">                    callbacks=[PrintDot()])</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>训练时候的loss<br><img src="/images/PM25/loss.png" alt="training_loss"></p>
+</blockquote>
+<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><blockquote>
+<p>loss是<strong>7.47</strong></p>
+</blockquote>
+<p><img src="/images/PM25/dnn.png" alt="test"></p>
+<h2 id="再优化-1"><a href="#再优化-1" class="headerlink" title="再优化"></a>再优化</h2><h3 id="不使用Feature-Scaling"><a href="#不使用Feature-Scaling" class="headerlink" title="不使用Feature Scaling"></a>不使用Feature Scaling</h3><blockquote>
+<p>训练时候的loss<br><img src="/images/PM25/non_fs.png" alt="nonFS"></p>
+</blockquote>
+<blockquote>
+<p>测试时loss是<strong>5.170</strong><br><img src="/images/PM25/non_fs_rs.png" alt="noFSr"></p>
+</blockquote>
+<h3 id="增加layers"><a href="#增加layers" class="headerlink" title="增加layers"></a>增加layers</h3><blockquote>
+<p>增加多一层layer<br>  训练时loss</p>
+</blockquote>
+<p><img src="/images/PM25/3layers_loss.png" alt="3layers"></p>
+<blockquote>
+<p>测试时loss <strong>7.5</strong></p>
+</blockquote>
+<blockquote>
+<p>所以说DNN最优能达到5.17, Linear Model最优5.4<br>不错🎉🎉🎉🎉🎉🎉</p>
+</blockquote>
+<h1 id="Repo"><a href="#Repo" class="headerlink" title="Repo"></a>Repo</h1><p><a href="https://github.com/VIXNESS/machine-learning-course.git" target="_blank" rel="noopener">VIXNESS/machine-learning-course</a></p>
+
       
     </div>
 
@@ -930,7 +975,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Linear-Regression-对PM2-5进行预测"><span class="nav-number">1.</span> <span class="nav-text">使用Linear Regression 对PM2.5进行预测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集"><span class="nav-number">1.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据处理"><span class="nav-number">1.2.</span> <span class="nav-text">数据处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#必要类库"><span class="nav-number">1.2.1.</span> <span class="nav-text">必要类库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#载入数据"><span class="nav-number">1.2.2.</span> <span class="nav-text">载入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重新组织数据"><span class="nav-number">1.2.3.</span> <span class="nav-text">重新组织数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练"><span class="nav-number">1.3.</span> <span class="nav-text">训练</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义loss-function"><span class="nav-number">1.3.1.</span> <span class="nav-text">定义loss function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Descent"><span class="nav-number">1.3.2.</span> <span class="nav-text">Gradient Descent</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">1.4.</span> <span class="nav-text">测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.4.1.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再优化"><span class="nav-number">1.5.</span> <span class="nav-text">再优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Deep-Learning-对PM2-5进行预测"><span class="nav-number">2.</span> <span class="nav-text">使用Deep Learning 对PM2.5进行预测</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Linear-Regression-对PM2-5进行预测"><span class="nav-number">1.</span> <span class="nav-text">使用Linear Regression 对PM2.5进行预测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集"><span class="nav-number">1.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据处理"><span class="nav-number">1.2.</span> <span class="nav-text">数据处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#必要类库"><span class="nav-number">1.2.1.</span> <span class="nav-text">必要类库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#载入数据"><span class="nav-number">1.2.2.</span> <span class="nav-text">载入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重新组织数据"><span class="nav-number">1.2.3.</span> <span class="nav-text">重新组织数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练"><span class="nav-number">1.3.</span> <span class="nav-text">训练</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义loss-function"><span class="nav-number">1.3.1.</span> <span class="nav-text">定义loss function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Descent"><span class="nav-number">1.3.2.</span> <span class="nav-text">Gradient Descent</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">1.4.</span> <span class="nav-text">测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.4.1.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再优化"><span class="nav-number">1.5.</span> <span class="nav-text">再优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用DNN-对PM2-5进行预测"><span class="nav-number">2.</span> <span class="nav-text">使用DNN 对PM2.5进行预测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Feature-Scaling"><span class="nav-number">2.1.</span> <span class="nav-text">Feature Scaling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Standardization"><span class="nav-number">2.1.1.</span> <span class="nav-text">Standardization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mean-Normalization"><span class="nav-number">2.1.2.</span> <span class="nav-text">Mean Normalization</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练-1"><span class="nav-number">2.2.</span> <span class="nav-text">训练</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#建立模型"><span class="nav-number">2.2.1.</span> <span class="nav-text">建立模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#训练-2"><span class="nav-number">2.2.2.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试-1"><span class="nav-number">2.2.3.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再优化-1"><span class="nav-number">2.3.</span> <span class="nav-text">再优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#不使用Feature-Scaling"><span class="nav-number">2.3.1.</span> <span class="nav-text">不使用Feature Scaling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加layers"><span class="nav-number">2.3.2.</span> <span class="nav-text">增加layers</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Repo"><span class="nav-number">3.</span> <span class="nav-text">Repo</span></a></li></ol></div>
             
 
           </div>
