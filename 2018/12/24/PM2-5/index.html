@@ -110,21 +110,27 @@
 
 
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="All tags">
-<meta property="og:url" content="http://meolin.net/tags/index.html">
+  <meta name="description" content="使用Linear Regression 对PM2.5进行预测数据集 training data testing data: features testing data: label Training data 和 Public testing data 的组织形式: 一天由18行组成,一行为一个指标,一共由18个指标,从第4列开始记录每个指标一天内24小时的变化数值,每个月连续记录前20天作为tr">
+<meta name="keywords" content="machine learing,linear regression">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PM2.5 预测">
+<meta property="og:url" content="http://meolin.net/2018/12/24/PM2-5/index.html">
 <meta property="og:site_name" content="喵灵">
+<meta property="og:description" content="使用Linear Regression 对PM2.5进行预测数据集 training data testing data: features testing data: label Training data 和 Public testing data 的组织形式: 一天由18行组成,一行为一个指标,一共由18个指标,从第4列开始记录每个指标一天内24小时的变化数值,每个月连续记录前20天作为tr">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-23T16:19:41.423Z">
+<meta property="og:image" content="http://meolin.net/2018/12/24/PM2-5/images/model_1.png">
+<meta property="og:updated_time" content="2018-12-24T10:06:19.146Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="All tags">
+<meta name="twitter:title" content="PM2.5 预测">
+<meta name="twitter:description" content="使用Linear Regression 对PM2.5进行预测数据集 training data testing data: features testing data: label Training data 和 Public testing data 的组织形式: 一天由18行组成,一行为一个指标,一共由18个指标,从第4列开始记录每个指标一天内24小时的变化数值,每个月连续记录前20天作为tr">
+<meta name="twitter:image" content="http://meolin.net/2018/12/24/PM2-5/images/model_1.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://meolin.net/tags/">
+  <link rel="canonical" href="http://meolin.net/2018/12/24/PM2-5/">
 
 
 
@@ -134,7 +140,7 @@
   };
 </script>
 
-  <title>All tags | 喵灵</title>
+  <title>PM2.5 预测 | 喵灵</title>
   
 
 
@@ -267,7 +273,7 @@
         
         
           
-          <li class="menu-item menu-item-tags menu-item-active">
+          <li class="menu-item menu-item-tags">
 
     
     
@@ -331,28 +337,6 @@
   
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
   
 
   
@@ -400,64 +384,348 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://meolin.net/2018/12/24/PM2-5/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jiang Tao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="喵灵">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">All tags</h1>
-
-<div class="post-meta">
-  
-  
-
-
-
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-                
-                
-                  
-                    
-                  
-                
-                  
-                    
-                  
-                
-                  
-                    
-                  
-                
-                目前共计 3 个标签
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/life/" style="font-size: 12px; color: #ccc">life</a> <a href="/tags/linear-regression/" style="font-size: 12px; color: #ccc">linear regression</a> <a href="/tags/machine-learing/" style="font-size: 12px; color: #ccc">machine learing</a>
-            </div>
-          </div>
+          <h1 class="post-title" itemprop="name headline">PM2.5 预测
+              
+            
+          </h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-24 15:26:00 / 修改时间：18:06:19" itemprop="dateCreated datePublished" datetime="2018-12-24T15:26:00+08:00">2018-12-24</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/machine-learning/" itemprop="url" rel="index"><span itemprop="name">machine learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h1 id="使用Linear-Regression-对PM2-5进行预测"><a href="#使用Linear-Regression-对PM2-5进行预测" class="headerlink" title="使用Linear Regression 对PM2.5进行预测"></a>使用Linear Regression 对PM2.5进行预测</h1><h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><blockquote>
+<p><a href="https://github.com/VIXNESS/machine-learning-course/blob/master/pm25_predict/train.csv" target="_blank" rel="noopener">training data</a></p>
+<p><a href="https://github.com/VIXNESS/machine-learning-course/blob/master/pm25_predict/test.csv" target="_blank" rel="noopener">testing data: features</a></p>
+<p><a href="https://github.com/VIXNESS/machine-learning-course/blob/master/pm25_predict/ans.csv" target="_blank" rel="noopener">testing data: label</a></p>
+<p>Training data 和 Public testing data 的组织形式:</p>
+<p>一天由18行组成,一行为一个指标,一共由18个指标,从第4列开始记录每个指标一天内24小时的变化数值,每个月连续记录前20天作为training set,后10天作为testing set,一共记录了240个小时</p>
+</blockquote>
+<a id="more"></a>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>观测站</th>
+<th>指标</th>
+<th>0时</th>
+<th>…</th>
+<th>23时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>day 1</td>
+<td>xxx</td>
+<td>PM2.5</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 1</td>
+<td>xxx</td>
+<td>PM10</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 1</td>
+<td>xxx</td>
+<td>SO2</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 1</td>
+<td>xxx</td>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 2</td>
+<td>xxx</td>
+<td>PM2.5</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 2</td>
+<td>xxx</td>
+<td>PM10</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 2</td>
+<td>xxx</td>
+<td>SO2</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 2</td>
+<td>xxx</td>
+<td>…</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><h3 id="必要类库"><a href="#必要类库" class="headerlink" title="必要类库"></a>必要类库</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+<h3 id="载入数据"><a href="#载入数据" class="headerlink" title="载入数据"></a>载入数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">data = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">18</span>):</span><br><span class="line">    data.append([]) <span class="comment"># 初始化18列</span></span><br><span class="line">n_row = <span class="number">0</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'train.csv'</span>,<span class="string">'r'</span>,encoding = <span class="string">'big5'</span>) <span class="keyword">as</span> text: <span class="comment">#csv编码是big5</span></span><br><span class="line">    row = csv.reader(text, delimiter = <span class="string">","</span>)</span><br><span class="line">    <span class="keyword">for</span> r <span class="keyword">in</span> row:</span><br><span class="line">        <span class="keyword">if</span> n_row != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>,<span class="number">27</span>):</span><br><span class="line">                <span class="keyword">if</span> r[i] != <span class="string">"NR"</span>: <span class="comment">#NR为未降雨,对其设置为降雨量</span></span><br><span class="line">                    data[(n_row - <span class="number">1</span>) % <span class="number">18</span>].append(float(r[i]))</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                	<span class="comment">#设施0降雨为一个接近0的小量,</span></span><br><span class="line">                    <span class="comment">#若设为0,后续的梯度计算会有除0的风险</span></span><br><span class="line">                    data[(n_row - <span class="number">1</span>) % <span class="number">18</span>].append(float(<span class="number">0.0001</span>))</span><br><span class="line">        n_row += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="重新组织数据"><a href="#重新组织数据" class="headerlink" title="重新组织数据"></a>重新组织数据</h3><blockquote>
+<p>将之前的数据重新组织,对每个小时进行连续拼接</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Features</th>
+<th>0时</th>
+<th>…</th>
+<th>23时</th>
+<th>0时(次日)</th>
+<th>…</th>
+<th>23时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PM2.5</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>..</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>PM 10</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">x = [] <span class="comment"># 样本矩阵</span></span><br><span class="line">y = [] <span class="comment"># 实际的值</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">12</span>): <span class="comment"># 12个月</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">471</span>): </span><br><span class="line">    <span class="comment"># 每输入9个小时的数值,预测第10个小时的PM2.5值,</span></span><br><span class="line">    <span class="comment"># 这样连续的「10个小时」每个月有471个</span></span><br><span class="line">        x.append([]) <span class="comment">#</span></span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> range(<span class="number">18</span>): <span class="comment"># 遍历18个特征</span></span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">9</span>): <span class="comment"># 遍历前9个小时</span></span><br><span class="line">                x[<span class="number">471</span> * i + j].append(data[w][<span class="number">480</span> * i + j + t])</span><br><span class="line">        <span class="comment"># 将第10个小时的值作为实际的PM2.5的值</span></span><br><span class="line">        y.append(data[<span class="number">9</span>][<span class="number">480</span> * i + j + <span class="number">9</span>])</span><br><span class="line">x = np.array(x)</span><br><span class="line">y = np.array(y)</span><br><span class="line"></span><br><span class="line"><span class="comment">#在第一列添上一条全为1的列作为bias</span></span><br><span class="line">x = np.concatenate((np.ones((x.shape[<span class="number">0</span>],<span class="number">1</span>)),x),axis = <span class="number">1</span>) </span><br><span class="line">w = np.zeros(x.shape[<span class="number">1</span>]) <span class="comment">#weight</span></span><br></pre></td></tr></table></figure>
+<h3 id="定义loss-function"><a href="#定义loss-function" class="headerlink" title="定义loss function"></a>定义loss function</h3><blockquote>
+<p>使用 error square<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lossFunction</span><span class="params">(target,weight,samples)</span>:</span></span><br><span class="line">    M = target - np.dot(weight,samples.T)</span><br><span class="line">    loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> M:</span><br><span class="line">        loss += m**<span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h3><blockquote>
+<p>使用Adagra 对learning rate进行控制</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">lr = <span class="number">8</span> <span class="comment">#learning rate 设置</span></span><br><span class="line">pre_grad = np.ones(x.shape[<span class="number">1</span>])<span class="comment"># 每个特征有独立的learning rate</span></span><br><span class="line"><span class="keyword">for</span> r <span class="keyword">in</span> range(<span class="number">10000</span>):</span><br><span class="line">    temp_loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> range(<span class="number">36</span>):</span><br><span class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> range(<span class="number">156</span>):</span><br><span class="line">            L = np.dot(w,x[<span class="number">157</span> * m + s].T) - y[<span class="number">157</span> * m + s]</span><br><span class="line">            grad = np.dot(x[<span class="number">157</span> * m + s].T,L)*(<span class="number">2</span>)</span><br><span class="line">            pre_grad += grad**<span class="number">2</span></span><br><span class="line">            ada = np.sqrt(pre_grad)</span><br><span class="line">            w = w - lr * grad/ada</span><br><span class="line">        temp_loss += abs(np.dot(w,x[<span class="number">157</span> * m + <span class="number">156</span>].T) - y[<span class="number">157</span> * m + <span class="number">156</span>])</span><br><span class="line">    print(<span class="string">"%.2f"</span> % (r * <span class="number">100</span> / <span class="number">10000</span>),<span class="string">'% loss:'</span>,<span class="string">"%.4f"</span> % (temp_loss / <span class="number">36</span>))</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>保存 weights<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">np.save(<span class="string">'model.npy'</span>,w)</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="Testing"><a href="#Testing" class="headerlink" title="Testing"></a>Testing</h3><ul>
+<li>加载测试特征数据集(略)</li>
+<li>加载label</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">y = []</span><br><span class="line">rr = <span class="number">0</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'ans.csv'</span>,<span class="string">'r'</span>,encoding = <span class="string">'big5'</span>) <span class="keyword">as</span> ans:</span><br><span class="line">    row = csv.reader(ans,delimiter = <span class="string">','</span>)</span><br><span class="line">    <span class="keyword">for</span> r <span class="keyword">in</span> row:</span><br><span class="line">        <span class="keyword">if</span> rr != <span class="number">0</span>:</span><br><span class="line">            y.append(float(r[<span class="number">1</span>]))</span><br><span class="line">        rr += <span class="number">1</span></span><br><span class="line">y = np.array(y)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>加载weights</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">w = np.load(<span class="string">'model.npy'</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>测试</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">t = np.dot(x,w)</span><br><span class="line">L = t - y</span><br><span class="line">loss = []</span><br><span class="line">sum = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> l <span class="keyword">in</span> L:</span><br><span class="line">    loss.append(abs(l))</span><br><span class="line">    sum += abs(l)</span><br><span class="line">print(sum / len(L))</span><br><span class="line">plt.plot(y,color = <span class="string">"red"</span>,label = <span class="string">'target'</span>)</span><br><span class="line">plt.plot(t,color = <span class="string">"blue"</span>,label = <span class="string">'hypothesis'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'pm 2.5'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="images/model_1.png" alt="结论"></p>
+<blockquote>
+<p>误差 <strong>14.427</strong></p>
+</blockquote>
+
       
     </div>
-    
-
-
 
     
+
     
     
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/machine-learing/" rel="tag"># machine learing</a>
+          
+            <a href="/tags/linear-regression/" rel="tag"># linear regression</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/23/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
   </div>
 
 
@@ -491,8 +759,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -619,6 +896,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Linear-Regression-对PM2-5进行预测"><span class="nav-number">1.</span> <span class="nav-text">使用Linear Regression 对PM2.5进行预测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集"><span class="nav-number">1.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据处理"><span class="nav-number">1.2.</span> <span class="nav-text">数据处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#必要类库"><span class="nav-number">1.2.1.</span> <span class="nav-text">必要类库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#载入数据"><span class="nav-number">1.2.2.</span> <span class="nav-text">载入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重新组织数据"><span class="nav-number">1.2.3.</span> <span class="nav-text">重新组织数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义loss-function"><span class="nav-number">1.2.4.</span> <span class="nav-text">定义loss function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Descent"><span class="nav-number">1.2.5.</span> <span class="nav-text">Gradient Descent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Testing"><span class="nav-number">1.2.6.</span> <span class="nav-text">Testing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.2.7.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
