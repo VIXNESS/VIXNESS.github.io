@@ -122,7 +122,7 @@
 <meta property="og:image" content="http://meolin.net/images/model_1.png">
 <meta property="og:image" content="http://meolin.net/images/model_3.png">
 <meta property="og:image" content="http://meolin.net/images/model_4.png">
-<meta property="og:updated_time" content="2018-12-24T10:41:25.797Z">
+<meta property="og:updated_time" content="2018-12-24T10:49:07.483Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PM2.5 预测">
 <meta name="twitter:description" content="使用Linear Regression 对PM2.5进行预测数据集 training data testing data: samples testing data: label Training data 和 Public testing data 的组织形式: 一天由18行组成,一行为一个指标,一共由18个指标,从第4列开始记录每个指标一天内24小时的变化数值,每个月连续记录前20天作为tra">
@@ -443,7 +443,7 @@
                 
               
 
-              <time title="创建时间：2018-12-24 15:26:00 / 修改时间：18:41:25" itemprop="dateCreated datePublished" datetime="2018-12-24T15:26:00+08:00">2018-12-24</time>
+              <time title="创建时间：2018-12-24 15:26:00 / 修改时间：18:49:07" itemprop="dateCreated datePublished" datetime="2018-12-24T15:26:00+08:00">2018-12-24</time>
             
 
             
@@ -641,7 +641,7 @@
 </tbody>
 </table>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">x = [] <span class="comment"># 样本矩阵</span></span><br><span class="line">y = [] <span class="comment"># 实际的值</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">12</span>): <span class="comment"># 12个月</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">471</span>): </span><br><span class="line">    <span class="comment"># 每输入9个小时的数值,预测第10个小时的PM2.5值,</span></span><br><span class="line">    <span class="comment"># 这样连续的「10个小时」每个月有471个</span></span><br><span class="line">        x.append([]) <span class="comment">#</span></span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> range(<span class="number">18</span>): <span class="comment"># 遍历18个特征</span></span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">9</span>): <span class="comment"># 遍历前9个小时</span></span><br><span class="line">                x[<span class="number">471</span> * i + j].append(data[w][<span class="number">480</span> * i + j + t])</span><br><span class="line">        <span class="comment"># 将第10个小时的值作为实际的PM2.5的值</span></span><br><span class="line">        y.append(data[<span class="number">9</span>][<span class="number">480</span> * i + j + <span class="number">9</span>])</span><br><span class="line">x = np.array(x)</span><br><span class="line">y = np.array(y)</span><br><span class="line"></span><br><span class="line"><span class="comment">#在第一列添上一条全为1的列作为bias</span></span><br><span class="line">x = np.concatenate((np.ones((x.shape[<span class="number">0</span>],<span class="number">1</span>)),x),axis = <span class="number">1</span>) </span><br><span class="line">w = np.zeros(x.shape[<span class="number">1</span>]) <span class="comment">#weight</span></span><br></pre></td></tr></table></figure>
-<h3 id="定义loss-function"><a href="#定义loss-function" class="headerlink" title="定义loss function"></a>定义loss function</h3><blockquote>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><h3 id="定义loss-function"><a href="#定义loss-function" class="headerlink" title="定义loss function"></a>定义loss function</h3><blockquote>
 <p>使用 error square<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lossFunction</span><span class="params">(target,weight,samples)</span>:</span></span><br><span class="line">    M = target - np.dot(weight,samples.T)</span><br><span class="line">    loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> M:</span><br><span class="line">        loss += m**<span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure></p>
 </blockquote>
 <h3 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h3><blockquote>
@@ -651,7 +651,7 @@
 <blockquote>
 <p>保存 weights<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">np.save(<span class="string">'model.npy'</span>,w)</span><br></pre></td></tr></table></figure></p>
 </blockquote>
-<h3 id="Testing"><a href="#Testing" class="headerlink" title="Testing"></a>Testing</h3><ul>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><ul>
 <li>加载测试特征数据集(略)</li>
 <li>加载label</li>
 </ul>
@@ -687,7 +687,7 @@
 <blockquote>
 <p>PM2.5 误差 <strong>5.406</strong><br>我服了,之前做的时候是会underfitting导致误差到7.4的,这回倒好更加低了</p>
 </blockquote>
-
+<h1 id="使用Deep-Learning-对PM2-5进行预测"><a href="#使用Deep-Learning-对PM2-5进行预测" class="headerlink" title="使用Deep Learning 对PM2.5进行预测"></a>使用Deep Learning 对PM2.5进行预测</h1>
       
     </div>
 
@@ -929,7 +929,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Linear-Regression-对PM2-5进行预测"><span class="nav-number">1.</span> <span class="nav-text">使用Linear Regression 对PM2.5进行预测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集"><span class="nav-number">1.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据处理"><span class="nav-number">1.2.</span> <span class="nav-text">数据处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#必要类库"><span class="nav-number">1.2.1.</span> <span class="nav-text">必要类库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#载入数据"><span class="nav-number">1.2.2.</span> <span class="nav-text">载入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重新组织数据"><span class="nav-number">1.2.3.</span> <span class="nav-text">重新组织数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义loss-function"><span class="nav-number">1.2.4.</span> <span class="nav-text">定义loss function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Descent"><span class="nav-number">1.2.5.</span> <span class="nav-text">Gradient Descent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Testing"><span class="nav-number">1.2.6.</span> <span class="nav-text">Testing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.2.7.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再优化"><span class="nav-number">1.3.</span> <span class="nav-text">再优化</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Linear-Regression-对PM2-5进行预测"><span class="nav-number">1.</span> <span class="nav-text">使用Linear Regression 对PM2.5进行预测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集"><span class="nav-number">1.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据处理"><span class="nav-number">1.2.</span> <span class="nav-text">数据处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#必要类库"><span class="nav-number">1.2.1.</span> <span class="nav-text">必要类库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#载入数据"><span class="nav-number">1.2.2.</span> <span class="nav-text">载入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重新组织数据"><span class="nav-number">1.2.3.</span> <span class="nav-text">重新组织数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练"><span class="nav-number">1.3.</span> <span class="nav-text">训练</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义loss-function"><span class="nav-number">1.3.1.</span> <span class="nav-text">定义loss function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Descent"><span class="nav-number">1.3.2.</span> <span class="nav-text">Gradient Descent</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">1.4.</span> <span class="nav-text">测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.4.1.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再优化"><span class="nav-number">1.5.</span> <span class="nav-text">再优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Deep-Learning-对PM2-5进行预测"><span class="nav-number">2.</span> <span class="nav-text">使用Deep Learning 对PM2.5进行预测</span></a></li></ol></div>
             
 
           </div>
