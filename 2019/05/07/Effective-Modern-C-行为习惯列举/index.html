@@ -110,18 +110,18 @@
 
 
 
-  <meta name="description" content="Effective Modern C++ 行为习惯列举 面向已经掌握了C++11之前的同学, 本文只列举了基本的几条. ref: Effective Modern C++  用auto 代替显示声明.✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b;">
+  <meta name="description" content="前言 面向已经掌握了C++11之前的同学, 本文只列举了基本的几条. ref: Effective Modern C++  用auto 代替显示声明.✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b;">
 <meta name="keywords" content="c++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Effective Modern C++ 行为习惯列举">
 <meta property="og:url" content="http://meolin.net/2019/05/07/Effective-Modern-C-行为习惯列举/index.html">
 <meta property="og:site_name" content="喵灵">
-<meta property="og:description" content="Effective Modern C++ 行为习惯列举 面向已经掌握了C++11之前的同学, 本文只列举了基本的几条. ref: Effective Modern C++  用auto 代替显示声明.✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b;">
+<meta property="og:description" content="前言 面向已经掌握了C++11之前的同学, 本文只列举了基本的几条. ref: Effective Modern C++  用auto 代替显示声明.✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b;">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-07T09:23:04.509Z">
+<meta property="og:updated_time" content="2019-05-07T09:25:40.369Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Effective Modern C++ 行为习惯列举">
-<meta name="twitter:description" content="Effective Modern C++ 行为习惯列举 面向已经掌握了C++11之前的同学, 本文只列举了基本的几条. ref: Effective Modern C++  用auto 代替显示声明.✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b;">
+<meta name="twitter:description" content="前言 面向已经掌握了C++11之前的同学, 本文只列举了基本的几条. ref: Effective Modern C++  用auto 代替显示声明.✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b;">
 
 
 
@@ -438,7 +438,7 @@
                 
               
 
-              <time title="创建时间：2019-05-07 16:57:00 / 修改时间：17:23:04" itemprop="dateCreated datePublished" datetime="2019-05-07T16:57:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-05-07 16:57:00 / 修改时间：17:25:40" itemprop="dateCreated datePublished" datetime="2019-05-07T16:57:00+08:00">2019-05-07</time>
             
 
             
@@ -501,7 +501,7 @@
       
 
       
-        <h1 id="Effective-Modern-C-行为习惯列举"><a href="#Effective-Modern-C-行为习惯列举" class="headerlink" title="Effective Modern C++ 行为习惯列举"></a>Effective Modern C++ 行为习惯列举</h1><blockquote>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
 <p>面向已经掌握了C++11之前的同学, 本文只列举了基本的几条.</p>
 <p>ref: Effective Modern C++</p>
 </blockquote>
@@ -782,7 +782,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Effective-Modern-C-行为习惯列举"><span class="nav-number">1.</span> <span class="nav-text">Effective Modern C++ 行为习惯列举</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用auto-代替显示声明"><span class="nav-number">1.1.</span> <span class="nav-text">用auto 代替显示声明.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用nullptr-替代NULL-和0"><span class="nav-number">1.2.</span> <span class="nav-text">使用nullptr 替代NULL 和0.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用using-替代typedef"><span class="nav-number">1.3.</span> <span class="nav-text">使用using 替代typedef.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有范围的enum-替代无范围的enum"><span class="nav-number">1.4.</span> <span class="nav-text">有范围的enum 替代无范围的enum.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#禁用函数时-用delete-替代private"><span class="nav-number">1.5.</span> <span class="nav-text">禁用函数时, 用delete 替代private.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用override-关键字标注-override函数"><span class="nav-number">1.6.</span> <span class="nav-text">使用override 关键字标注 override函数.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用const-iterators-替代iterators"><span class="nav-number">1.7.</span> <span class="nav-text">使用const_iterators 替代iterators.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如果函数不会抛出异常-使用noexcept进行声明"><span class="nav-number">1.8.</span> <span class="nav-text">如果函数不会抛出异常, 使用noexcept进行声明.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用智能指针-std-unique-ptr-std-shared-ptr-std-weak-ptr替代传统指针-std-auto-淘汰了别用了"><span class="nav-number">1.9.</span> <span class="nav-text">使用智能指针 std::unique_ptr, std::shared_ptr,  std::weak_ptr替代传统指针 (std::auto 淘汰了别用了).</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#能用constexpr就用constexpr"><span class="nav-number">1.10.</span> <span class="nav-text">能用constexpr就用constexpr.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#让常成员函数线程安全-使用std-mutex-或std-atomic-等"><span class="nav-number">1.11.</span> <span class="nav-text">让常成员函数线程安全: 使用std::mutex 或std::atomic 等.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#善用右值-Rvalue-语义转移-Move-Semantics-完美转发-Perfect-Forwarding"><span class="nav-number">1.12.</span> <span class="nav-text">善用右值[Rvalue], 语义转移[Move Semantics], 完美转发[Perfect Forwarding]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#善用Lambda-表达式"><span class="nav-number">1.13.</span> <span class="nav-text">善用Lambda 表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#善用并发编程API"><span class="nav-number">1.14.</span> <span class="nav-text">善用并发编程API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器中使用emplace-back-替代push-back"><span class="nav-number">1.15.</span> <span class="nav-text">容器中使用emplace_back(),  替代push_back()</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用auto-代替显示声明"><span class="nav-number">2.</span> <span class="nav-text">用auto 代替显示声明.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用nullptr-替代NULL-和0"><span class="nav-number">3.</span> <span class="nav-text">使用nullptr 替代NULL 和0.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用using-替代typedef"><span class="nav-number">4.</span> <span class="nav-text">使用using 替代typedef.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有范围的enum-替代无范围的enum"><span class="nav-number">5.</span> <span class="nav-text">有范围的enum 替代无范围的enum.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#禁用函数时-用delete-替代private"><span class="nav-number">6.</span> <span class="nav-text">禁用函数时, 用delete 替代private.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用override-关键字标注-override函数"><span class="nav-number">7.</span> <span class="nav-text">使用override 关键字标注 override函数.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用const-iterators-替代iterators"><span class="nav-number">8.</span> <span class="nav-text">使用const_iterators 替代iterators.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如果函数不会抛出异常-使用noexcept进行声明"><span class="nav-number">9.</span> <span class="nav-text">如果函数不会抛出异常, 使用noexcept进行声明.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用智能指针-std-unique-ptr-std-shared-ptr-std-weak-ptr替代传统指针-std-auto-淘汰了别用了"><span class="nav-number">10.</span> <span class="nav-text">使用智能指针 std::unique_ptr, std::shared_ptr,  std::weak_ptr替代传统指针 (std::auto 淘汰了别用了).</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#能用constexpr就用constexpr"><span class="nav-number">11.</span> <span class="nav-text">能用constexpr就用constexpr.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#让常成员函数线程安全-使用std-mutex-或std-atomic-等"><span class="nav-number">12.</span> <span class="nav-text">让常成员函数线程安全: 使用std::mutex 或std::atomic 等.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#善用右值-Rvalue-语义转移-Move-Semantics-完美转发-Perfect-Forwarding"><span class="nav-number">13.</span> <span class="nav-text">善用右值[Rvalue], 语义转移[Move Semantics], 完美转发[Perfect Forwarding]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#善用Lambda-表达式"><span class="nav-number">14.</span> <span class="nav-text">善用Lambda 表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#善用并发编程API"><span class="nav-number">15.</span> <span class="nav-text">善用并发编程API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器中使用emplace-back-替代push-back"><span class="nav-number">16.</span> <span class="nav-text">容器中使用emplace_back(),  替代push_back()</span></a></li></ol></div>
             
 
           </div>
