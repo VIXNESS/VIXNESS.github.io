@@ -437,7 +437,7 @@
                 
               
 
-              <time title="创建时间：2019-05-07 16:57:00 / 修改时间：17:00:18" itemprop="dateCreated datePublished" datetime="2019-05-07T16:57:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-05-07 16:57:00 / 修改时间：17:02:32" itemprop="dateCreated datePublished" datetime="2019-05-07T16:57:00+08:00">2019-05-07</time>
             
 
             
@@ -495,21 +495,12 @@
       
         
           <h1 id="Effective-Modern-C-行为习惯列举"><a href="#Effective-Modern-C-行为习惯列举" class="headerlink" title="Effective Modern C++ 行为习惯列举"></a>Effective Modern C++ 行为习惯列举</h1><blockquote>
-<p>面向已经掌握了C++11之前的同学, 本文只列举了常用的几条, 尚不完整.</p>
+<p>面向已经掌握了C++11之前的同学, 本文只列举了基本的几条.</p>
 <p>ref: Effective Modern C++</p>
 </blockquote>
 <p>1.用<strong>auto</strong> 代替显示声明.</p>
 <p>✖ 错误示范:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typename</span> <span class="built_in">std</span>::iterator_traits&lt;It&gt;::value_type currValue = *b;</span><br></pre></td></tr></table></figure>
-<p>✔ 正确示范:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> currValue = *b;</span><br></pre></td></tr></table></figure>
-<p>2.使用<strong>nullptr</strong> 替代<strong>NULL</strong> 和<strong>0</strong>.</p>
-<p>✖ 错误示范:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="number">0</span>)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="literal">NULL</span>)&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>✔ 正确示范:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="literal">nullptr</span>)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>3.使用<strong>using</strong> 替代<strong>typedef</strong>.<br>
           <!--noindex-->
           
             <div class="post-button text-center">
@@ -521,7 +512,7 @@
           <!--/noindex-->
         
       
-    </p></div>
+    </div>
 
     
 

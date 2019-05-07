@@ -110,18 +110,18 @@
 
 
 
-  <meta name="description" content="Effective Modern C++ 行为习惯列举 面向已经掌握了C++11之前的同学, 本文只列举了常用的几条, 尚不完整. ref: Effective Modern C++  1.用auto 代替显示声明. ✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b; ✔ 正确示范: 1auto">
+  <meta name="description" content="Effective Modern C++ 行为习惯列举 面向已经掌握了C++11之前的同学, 本文只列举了基本的几条. ref: Effective Modern C++  1.用auto 代替显示声明. ✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b;">
 <meta name="keywords" content="c++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Effective Modern C++ 行为习惯列举">
 <meta property="og:url" content="http://meolin.net/2019/05/07/Effective-Modern-C-行为习惯列举/index.html">
 <meta property="og:site_name" content="喵灵">
-<meta property="og:description" content="Effective Modern C++ 行为习惯列举 面向已经掌握了C++11之前的同学, 本文只列举了常用的几条, 尚不完整. ref: Effective Modern C++  1.用auto 代替显示声明. ✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b; ✔ 正确示范: 1auto">
+<meta property="og:description" content="Effective Modern C++ 行为习惯列举 面向已经掌握了C++11之前的同学, 本文只列举了基本的几条. ref: Effective Modern C++  1.用auto 代替显示声明. ✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b;">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-07T09:00:18.588Z">
+<meta property="og:updated_time" content="2019-05-07T09:02:32.575Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Effective Modern C++ 行为习惯列举">
-<meta name="twitter:description" content="Effective Modern C++ 行为习惯列举 面向已经掌握了C++11之前的同学, 本文只列举了常用的几条, 尚不完整. ref: Effective Modern C++  1.用auto 代替显示声明. ✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b; ✔ 正确示范: 1auto">
+<meta name="twitter:description" content="Effective Modern C++ 行为习惯列举 面向已经掌握了C++11之前的同学, 本文只列举了基本的几条. ref: Effective Modern C++  1.用auto 代替显示声明. ✖ 错误示范: 1typename std::iterator_traits&amp;lt;It&amp;gt;::value_type currValue = *b;">
 
 
 
@@ -438,7 +438,7 @@
                 
               
 
-              <time title="创建时间：2019-05-07 16:57:00 / 修改时间：17:00:18" itemprop="dateCreated datePublished" datetime="2019-05-07T16:57:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-05-07 16:57:00 / 修改时间：17:02:32" itemprop="dateCreated datePublished" datetime="2019-05-07T16:57:00+08:00">2019-05-07</time>
             
 
             
@@ -502,12 +502,13 @@
 
       
         <h1 id="Effective-Modern-C-行为习惯列举"><a href="#Effective-Modern-C-行为习惯列举" class="headerlink" title="Effective Modern C++ 行为习惯列举"></a>Effective Modern C++ 行为习惯列举</h1><blockquote>
-<p>面向已经掌握了C++11之前的同学, 本文只列举了常用的几条, 尚不完整.</p>
+<p>面向已经掌握了C++11之前的同学, 本文只列举了基本的几条.</p>
 <p>ref: Effective Modern C++</p>
 </blockquote>
 <p>1.用<strong>auto</strong> 代替显示声明.</p>
 <p>✖ 错误示范:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typename</span> <span class="built_in">std</span>::iterator_traits&lt;It&gt;::value_type currValue = *b;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>✔ 正确示范:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> currValue = *b;</span><br></pre></td></tr></table></figure>
 <p>2.使用<strong>nullptr</strong> 替代<strong>NULL</strong> 和<strong>0</strong>.</p>
@@ -516,7 +517,8 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="literal">NULL</span>)&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>✔ 正确示范:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="literal">nullptr</span>)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>3.使用<strong>using</strong> 替代<strong>typedef</strong>.<br><a id="more"></a><br>✖ 错误示范:</p>
+<p>3.使用<strong>using</strong> 替代<strong>typedef</strong>.</p>
+<p>✖ 错误示范:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;<span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, <span class="built_in">std</span>::<span class="built_in">string</span>&gt;&gt; UPtrMapSS;</span><br></pre></td></tr></table></figure>
 <p>✔ 正确示范:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> UPtrMapSS = <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;<span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, <span class="built_in">std</span>::<span class="built_in">string</span>&gt;&gt;;</span><br></pre></td></tr></table></figure>
