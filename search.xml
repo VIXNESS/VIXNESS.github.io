@@ -1,32 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[Effective Modern C++ 行为习惯列举]]></title>
-    <url>%2F2019%2F05%2F07%2FEffective-Modern-C-%E8%A1%8C%E4%B8%BA%E4%B9%A0%E6%83%AF%E5%88%97%E4%B8%BE%2F</url>
-    <content type="text"><![CDATA[前言 面向已经掌握了C++11之前的同学, 本文只列举了基本的几条. ref: Effective Modern C++ 用auto 代替显示声明.✘ 错误示范:1typename std::iterator_traits&lt;It&gt;::value_type currValue = *b; ✔ 正确示范: 1auto currValue = *b; 使用nullptr 替代NULL 和0.✘ 错误示范: 123if (result == 0)&#123; ...&#125; 123if (result == NULL)&#123; ...&#125; ✔ 正确示范: 123if (result == nullptr)&#123; ...&#125; 使用using 替代typedef.✘ 错误示范: 1typedef std::unique_ptr&lt;std::unordered_map&lt;std::string, std::string&gt;&gt; UPtrMapSS; ✔ 正确示范: 1using UPtrMapSS = std::unique_ptr&lt;std::unordered_map&lt;std::string, std::string&gt;&gt;; 有范围的enum 替代无范围的enum.✘ 错误示范: 12enum Color &#123; black, white, red &#125;;auto white = false; //white 已经被声明了, error! ✔ 正确示范: 1234enum class Color &#123; black, white, red &#125;;auto white = false; // 一切正常Color c = Color::white; //规范的声明方式auto c = Color::white; //规范的声明方式 禁用函数时, 用delete 替代private.✘ 错误示范: 12345678class basic_ios : public ios_base &#123; public: ...private: basic_ios(const basic_ios&amp; ); basic_ios&amp; operator=(const basic_ios&amp;); ...&#125;; ✔ 正确示范: 123456class basic_ios : public ios_base &#123; public: basic_ios(const basic_ios&amp; ) = delete; basic_ios&amp; operator=(const basic_ios&amp;) = delete; ...&#125;; 使用override 关键字标注 override函数.1234567891011121314class Base &#123; public: virtual void mf1() const; virtual void mf2(int x); virtual void mf3() &amp;; void mf4() const; &#125;;class Derived: public Base &#123; public: virtual void mf1() override; virtual void mf2(unsigned int x) override; virtual void mf3() &amp;&amp; override; virtual void mf4() const override;&#125;; 使用const_iterators 替代iterators.✘ 错误示范: 1234std::vector&lt;int&gt; values;…auto it = std::find(values.begin(),values.end(), 1983); //使用begin()和end()values.insert(it, 1998); ✔ 正确示范: 1234std::vector&lt;int&gt; values; …auto it = std::find(values.cbegin(),values.cend(), 1983);//使用cbegin()和cend()values.insert(it, 1998); 如果函数不会抛出异常, 使用noexcept进行声明.✘ C++98: 1int f(int x) throw(); ✔ C++11: 1int f(int x) noexcept; 使用智能指针 std::unique_ptr, std::shared_ptr, std::weak_ptr替代传统指针 (std::auto 淘汰了别用了).能用constexpr就用constexpr.让常成员函数线程安全: 使用std::mutex 或std::atomic 等.善用右值[Rvalue], 语义转移[Move Semantics], 完美转发[Perfect Forwarding]善用Lambda 表达式善用并发编程API容器中使用emplace_back(), 替代push_back()]]></content>
-      <categories>
-        <category>c++</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[DNN 年收入预测]]></title>
-    <url>%2F2018%2F12%2F24%2F%E5%B9%B4%E6%94%B6%E5%85%A5%E9%A2%84%E6%B5%8B%2F</url>
-    <content type="text"><![CDATA[收入预测 通过 职位、婚姻情况、学历、家庭角色、种族、性别对其进行年薪的预测🥳🥳 Data SetTraining DataTesting Data预备工作所需类库12345import tensorflow as tffrom tensorflow import kerasimport numpy as npimport sysimport csv 数据装载 数据构成: [feature 1, … feature n; &gt;= 50k or &lt; 50k] 😵😵😵123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130131132133134135136137138139140141142143144145146147148149150151152153154155156157158159160161162163164165166167168169170171172173174175176177178179180181182def loadData(_x, _y, fileName): col_1 = [' State-gov', ' Self-emp-not-inc', ' Private', ' Federal-gov', ' Local-gov', ' ?', ' Self-emp-inc', ' Without-pay', ' Never-worked'] col_3 = [' Bachelors', ' HS-grad', ' 11th', ' Masters', ' 9th', ' Some-college', ' Assoc-acdm', ' Assoc-voc', ' 7th-8th', ' Doctorate', ' Prof-school', ' 5th-6th', ' 10th', ' 1st-4th', ' Preschool', ' 12th'] col_5 = [' Never-married', ' Married-civ-spouse', ' Divorced', ' Married-spouse-absent', ' Separated', ' Married-AF-spouse', ' Widowed'] col_6 = [' Adm-clerical', ' Exec-managerial', ' Handlers-cleaners', ' Prof-specialty', ' Other-service', ' Sales', ' Craft-repair', ' Transport-moving', ' Farming-fishing', ' Machine-op-inspct', ' Tech-support', ' ?', ' Protective-serv', ' Armed-Forces', ' Priv-house-serv'] col_7 = [' Not-in-family', ' Husband', ' Wife', ' Own-child', ' Unmarried', ' Other-relative'] col_8 = [' White', ' Black', ' Asian-Pac-Islander', ' Amer-Indian-Eskimo', ' Other'] col_9 = [' Male', ' Female'] col_13 = [' United-States', ' Cuba', ' Jamaica', ' India', ' ?', ' Mexico', ' South', ' Puerto-Rico', ' Honduras', ' England', ' Canada', ' Germany', ' Iran', ' Philippines', ' Italy', ' Poland', ' Columbia', ' Cambodia', ' Thailand', ' Ecuador', ' Laos', ' Taiwan', ' Haiti', ' Portugal', ' Dominican-Republic', ' El-Salvador', ' France', ' Guatemala', ' China', ' Japan', ' Yugoslavia', ' Peru', ' Outlying-US(Guam-USVI-etc)', ' Scotland', ' Trinadad&amp;Tobago', ' Greece', ' Nicaragua', ' Vietnam', ' Hong', ' Ireland', ' Hungary', ' Holand-Netherlands'] col_14 = [' &lt;=50K', ' &gt;50K', ' &lt;=50K.', ' &gt;50K.'] with open(fileName) as rawData: rows = csv.reader(rawData, delimiter = ",") for r in rows: if len(r) == 0: continue temp = [] for i in range(15): if i == 0: temp.append(float(r[i])) if i == 1: cnt = 0 for c in col_1: if c == r[i]: temp.append(float(cnt)) break cnt += 1 if i == 2: temp.append(float(r[i])) if i == 3: cnt = 0 for c in col_3: if c == r[i]: temp.append(float(cnt)) break cnt += 1 if i == 4: temp.append(float(r[i])) if i == 5: cnt = 0 for c in col_5: if c == r[i]: temp.append(float(cnt)) break cnt += 1 if i == 6: cnt = 0 for c in col_6: if c == r[i]: temp.append(float(cnt)) break cnt += 1 if i == 7: cnt = 0 for c in col_7: if c == r[i]: temp.append(float(cnt)) break cnt += 1 if i == 8: cnt = 0 for c in col_8: if c == r[i]: temp.append(float(cnt)) break cnt += 1 if i == 9: cnt = 0 for c in col_9: if c == r[i]: temp.append(float(cnt)) break cnt += 1 if i == 10 or i == 11 or i == 12: temp.append(float(r[i])) if i == 13: cnt = 0 for c in col_13: if c == r[i]: temp.append(float(cnt)) break cnt += 1 if i == 14: cnt = 0 for c in col_14: if c == r[i]: _y.append(float(cnt % 2)) break cnt += 1 _x.append(temp) 模型定义Feature Scaling 4种 Feature Scaling的方法 Standardization12345678910111213141516def standardization(dataMatrix): #🤩🤩🤩 if dataMatrix.shape[0] == 0: return dataMatrix for i in range(dataMatrix.shape[1]): sum = 0 for _x in dataMatrix: sum += _x[i] mean = sum / dataMatrix.shape[0] SD = 0 for _x in dataMatrix: SD += (_x[i] - mean)**2 SD = np.sqrt(SD / dataMatrix.shape[0]) for _x in dataMatrix: _x[i] = (_x[i] - mean) / SD return dataMatrix Mean Normalization123456789101112131415161718def meanNormalization(dataMatrix): if dataMatrix.shape[0] == 0: return dataMatrix for i in range(dataMatrix.shape[1]): sum = 0 max = 0 min = 0 for data in dataMatrix: sum += data[i] if data[i] &gt; max: max = data[i] if data[i] &lt; min: min = data[i] mean = sum / dataMatrix.shape[0] if (max - min) != 0: for data in dataMatrix: data[i] = (data[i] - mean) / (max - min) return dataMatrix Rescaling123456789101112131415def rescaling(dataMatrix): if dataMatrix.shape[0] == 0: return dataMatrix for i in range(dataMatrix.shape[1]): max = 0 min = 0 for data in dataMatrix: if data[i] &gt; max: max = data[i] if data[i] &lt; min: min = data[i] if max - min != 0: for data in dataMatrix: data[i] = (data[i] - min) / (max - min) return dataMatrix 使用以上某一种方法对数据进行Feature Scaling经过测试,Standardization的效果最好,其次是 Mean Normalization  12345678910111213141516trainX = []trainY = []testX = []testY = []loadData(trainX, trainY, 'train.csv')loadData(testX, testY, 'test.csv')trainX = np.array(trainX)trainY = np.array(trainY)testX = np.array(testX)testY = np.array(testY)trainX = standardization(trainX) #Test accuracy: 0.8504391622392502testX = standardization(testX)# trainX = meanNormalization(trainX) #Test accuracy: 0.8516675879786739# testX = meanNormalization(testX)# trainX = rescaling(trainX) #Test accuracy: 0.8477366255400303# testX = rescaling(testX) 训练设计模型 使用两层layers 激活函数 ReLU (就乱设计的) 😅Loss Function 用的是Cross Entropy, 因为使用了ReLU用Square Error会有许多的地方没有梯度,很尴尬🥵 12345678model = tf.keras.Sequential([ keras.layers.Dense(28, activation=tf.nn.relu), keras.layers.Dense(14, activation=tf.nn.relu), keras.layers.Dense(2,activation=tf.nn.softmax)])model.compile(optimizer=tf.train.AdamOptimizer(), loss='sparse_categorical_crossentropy', metrics=['accuracy']) 训练时的精准度: 测试精准度: 1216281/16281 [==============================] - 0s 25us/stepTest loss: 0.3315070253370084 Test accuracy: 0.8466310422863189 负优化取消Feature Scaling 很真实 🥵 1216281/16281 [==============================] - 0s 24us/stepTest loss: 12.310577790542826 Test accuracy: 0.23622627602315244 增加layers123456model = tf.keras.Sequential([ keras.layers.Dense(28, activation=tf.nn.relu), keras.layers.Dense(28, activation=tf.nn.relu), keras.layers.Dense(14, activation=tf.nn.relu), keras.layers.Dense(2,activation=tf.nn.softmax)]) 没用🤦‍ 🤦‍ 🤷‍ 🤷‍ 1216281/16281 [==============================] - 0s 26us/stepTest loss: 0.33134235454223626 Test accuracy: 0.8481665745274117 完结🎉🎉🎉 Repo&gt;50K?]]></content>
-      <categories>
-        <category>machine learning</category>
-      </categories>
-      <tags>
-        <tag>machine learning</tag>
-        <tag>deep learning</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[PM2.5 预测]]></title>
-    <url>%2F2018%2F12%2F24%2FPM2-5%2F</url>
-    <content type="text"><![CDATA[使用Linear Regression 对PM2.5进行预测数据集 training data testing data: samples testing data: label Training data 和 Public testing data 的组织形式: 一天由18行组成,一行为一个指标,一共由18个指标,从第4列开始记录每个指标一天内24小时的变化数值,每个月连续记录前20天作为training set,后10天作为testing set,一共记录了240个小时 日期 观测站 指标 0时 … 23时 day 1 xxx PM2.5 day 1 xxx PM10 day 1 xxx SO2 day 1 xxx … day 2 xxx PM2.5 day 2 xxx PM10 day 2 xxx SO2 day 2 xxx … 数据处理必要类库1234567import osimport tensorflow as tffrom tensorflow import kerasimport csvimport sysimport numpy as npimport matplotlib.pyplot as plt 载入数据12345678910111213141516data = []for i in range(18): data.append([]) # 初始化18列n_row = 0with open('train.csv','r',encoding = 'big5') as text: #csv编码是big5 row = csv.reader(text, delimiter = ",") for r in row: if n_row != 0: for i in range(3,27): if r[i] != "NR": #NR为未降雨,对其设置为降雨量 data[(n_row - 1) % 18].append(float(r[i])) else: #设施0降雨为一个接近0的小量, #若设为0,后续的梯度计算会有除0的风险 data[(n_row - 1) % 18].append(float(0.0001)) n_row += 1 重新组织数据 将之前的数据重新组织,对每个小时进行连续拼接 Features 0时 … 23时 0时(次日) … 23时 PM2.5 … .. PM 10 123456789101112131415161718x = [] # 样本矩阵y = [] # 实际的值for i in range(12): # 12个月 for j in range(471): # 每输入9个小时的数值,预测第10个小时的PM2.5值, # 这样连续的「10个小时」每个月有471个 x.append([]) # for w in range(18): # 遍历18个特征 for t in range(9): # 遍历前9个小时 x[471 * i + j].append(data[w][480 * i + j + t]) # 将第10个小时的值作为实际的PM2.5的值 y.append(data[9][480 * i + j + 9])x = np.array(x)y = np.array(y)#在第一列添上一条全为1的列作为biasx = np.concatenate((np.ones((x.shape[0],1)),x),axis = 1) w = np.zeros(x.shape[1]) #weight 训练定义loss function 使用 error square123456def lossFunction(target,weight,samples): M = target - np.dot(weight,samples.T) loss = 0 for m in M: loss += m**2 return loss Gradient Descent 使用Adagra 对learning rate进行控制 12345678910111213lr = 8 #learning rate 设置pre_grad = np.ones(x.shape[1])# 每个特征有独立的learning ratefor r in range(10000): temp_loss = 0 for m in range(36): for s in range(156): L = np.dot(w,x[157 * m + s].T) - y[157 * m + s] grad = np.dot(x[157 * m + s].T,L)*(2) pre_grad += grad**2 ada = np.sqrt(pre_grad) w = w - lr * grad/ada temp_loss += abs(np.dot(w,x[157 * m + 156].T) - y[157 * m + 156]) print("%.2f" % (r * 100 / 10000),'% loss:',"%.4f" % (temp_loss / 36)) 保存 weights1np.save('model.npy',w) 测试 加载测试特征数据集(略) 加载label 123456789y = []rr = 0with open('ans.csv','r',encoding = 'big5') as ans: row = csv.reader(ans,delimiter = ',') for r in row: if rr != 0: y.append(float(r[1])) rr += 1y = np.array(y) 加载weights 1w = np.load('model.npy') 测试 123456789101112t = np.dot(x,w)L = t - yloss = []sum = 0for l in L: loss.append(abs(l)) sum += abs(l)print(sum / len(L))plt.plot(y,color = "red",label = 'target')plt.plot(t,color = "blue",label = 'hypothesis')plt.ylabel('pm 2.5')plt.show() 结果 PM2.5 误差 14.427参数太多过拟合没有训练好,卡在了某个地方了,training时候的loss也很高 再优化 只取18个特征中的NMHC、NO2、O3、PM10、PM2.5 PM2.5 误差 8.987一个不错的开头,继续优化 只考虑PM 10和PM 2.5 PM2.5 误差 6.281 若在删减特征呢?只考虑 PM2.5 PM2.5 误差 5.406我服了,之前做的时候是会underfitting导致误差到7.4的,这回倒好更加低了 使用DNN 对PM2.5进行预测 使用的是tensorflow + keras预备工作略 Feature Scaling 用了两个不同的Feature Scaling的方法,结果上看差别不大,Standardization更加好一点 Standardization12345678910111213141516def standardization(dataMatrix): if dataMatrix.shape[0] == 0: return dataMatrix for i in range(dataMatrix.shape[1]): sum = 0 for _x in dataMatrix: sum += _x[i] mean = sum / dataMatrix.shape[0] SD = 0 for _x in dataMatrix: SD += (_x[i] - mean)**2 SD = np.sqrt(SD / dataMatrix.shape[0]) for _x in dataMatrix: _x[i] = (_x[i] - mean) / SD return dataMatrix Mean Normalization123456789101112131415161718def meanNormalization(dataMatrix): if dataMatrix.shape[0] == 0: return dataMatrix for i in range(dataMatrix.shape[1]): sum = 0 max = 0 min = 0 for data in dataMatrix: sum += data[i] if data[i] &gt; max: max = data[i] if data[i] &lt; min: min = data[i] mean = sum / dataMatrix.shape[0] if (max - min) != 0: for data in dataMatrix: data[i] = (data[i] - mean) / (max - min) return dataMatrix 1234trainX = standardization(trainX)testX = standardization(testX)# trainX = meanNormalization(trainX)# testX = meanNormalization(testX) 训练 使用output为8的两层layer,激活函数是ReLU(Sigmoid效果更加差) 建立模型12345678model = keras.Sequential([ keras.layers.Dense(8, activation=tf.nn.relu), keras.layers.Dense(8, activation=tf.nn.relu), keras.layers.Dense(1) ])model.compile(loss="mse", optimizer=tf.train.RMSPropOptimizer(0.001), metrics=['mae', 'mse']) 训练 跑100个epochs基本上没什么变化了1234567history = model.fit(trainX, trainY, batch_size = 64, epochs = 100, validation_split = 0.2, verbose=0, callbacks=[PrintDot()]) 训练时候的loss 测试 loss是7.47 再优化不使用Feature Scaling 训练时候的loss 测试时loss是5.170 增加layers 增加多一层layer 训练时loss 测试时loss 7.5 所以说DNN最优能达到5.17, Linear Model最优5.4不错🎉🎉🎉🎉🎉🎉 RepoVIXNESS/machine-learning-course]]></content>
+    <title>PM2.5 预测</title>
+    <url>/2018/12/24/PM2-5/</url>
+    <content><![CDATA[<h1 id="使用Linear-Regression-对PM2-5进行预测"><a href="#使用Linear-Regression-对PM2-5进行预测" class="headerlink" title="使用Linear Regression 对PM2.5进行预测"></a>使用Linear Regression 对PM2.5进行预测</h1><h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><blockquote>
+<p><a href="https://github.com/VIXNESS/machine-learning-course/blob/master/pm25_predict/train.csv" target="_blank" rel="noopener">training data</a></p>
+<p><a href="https://github.com/VIXNESS/machine-learning-course/blob/master/pm25_predict/test.csv" target="_blank" rel="noopener">testing data: samples</a></p>
+<p><a href="https://github.com/VIXNESS/machine-learning-course/blob/master/pm25_predict/ans.csv" target="_blank" rel="noopener">testing data: label</a></p>
+<p>Training data 和 Public testing data 的组织形式:</p>
+<p>一天由18行组成,一行为一个指标,一共由18个指标,从第4列开始记录每个指标一天内24小时的变化数值,每个月连续记录前20天作为training set,后10天作为testing set,一共记录了240个小时</p>
+</blockquote><a id="more"></a>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>观测站</th>
+<th>指标</th>
+<th>0时</th>
+<th>…</th>
+<th>23时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>day 1</td>
+<td>xxx</td>
+<td>PM2.5</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 1</td>
+<td>xxx</td>
+<td>PM10</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 1</td>
+<td>xxx</td>
+<td>SO2</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 1</td>
+<td>xxx</td>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 2</td>
+<td>xxx</td>
+<td>PM2.5</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 2</td>
+<td>xxx</td>
+<td>PM10</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 2</td>
+<td>xxx</td>
+<td>SO2</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>day 2</td>
+<td>xxx</td>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><h3 id="必要类库"><a href="#必要类库" class="headerlink" title="必要类库"></a>必要类库</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+<h3 id="载入数据"><a href="#载入数据" class="headerlink" title="载入数据"></a>载入数据</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">data = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">18</span>):</span><br><span class="line">    data.append([]) <span class="comment"># 初始化18列</span></span><br><span class="line">n_row = <span class="number">0</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'train.csv'</span>,<span class="string">'r'</span>,encoding = <span class="string">'big5'</span>) <span class="keyword">as</span> text: <span class="comment">#csv编码是big5</span></span><br><span class="line">    row = csv.reader(text, delimiter = <span class="string">","</span>)</span><br><span class="line">    <span class="keyword">for</span> r <span class="keyword">in</span> row:</span><br><span class="line">        <span class="keyword">if</span> n_row != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>,<span class="number">27</span>):</span><br><span class="line">                <span class="keyword">if</span> r[i] != <span class="string">"NR"</span>: <span class="comment">#NR为未降雨,对其设置为降雨量</span></span><br><span class="line">                    data[(n_row - <span class="number">1</span>) % <span class="number">18</span>].append(float(r[i]))</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                	<span class="comment">#设施0降雨为一个接近0的小量,</span></span><br><span class="line">                    <span class="comment">#若设为0,后续的梯度计算会有除0的风险</span></span><br><span class="line">                    data[(n_row - <span class="number">1</span>) % <span class="number">18</span>].append(float(<span class="number">0.0001</span>))</span><br><span class="line">        n_row += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="重新组织数据"><a href="#重新组织数据" class="headerlink" title="重新组织数据"></a>重新组织数据</h3><blockquote>
+<p>将之前的数据重新组织,对每个小时进行连续拼接</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Features</th>
+<th>0时</th>
+<th>…</th>
+<th>23时</th>
+<th>0时(次日)</th>
+<th>…</th>
+<th>23时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PM2.5</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>..</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>PM 10</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = [] <span class="comment"># 样本矩阵</span></span><br><span class="line">y = [] <span class="comment"># 实际的值</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">12</span>): <span class="comment"># 12个月</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">471</span>): </span><br><span class="line">    <span class="comment"># 每输入9个小时的数值,预测第10个小时的PM2.5值,</span></span><br><span class="line">    <span class="comment"># 这样连续的「10个小时」每个月有471个</span></span><br><span class="line">        x.append([]) <span class="comment">#</span></span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> range(<span class="number">18</span>): <span class="comment"># 遍历18个特征</span></span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">9</span>): <span class="comment"># 遍历前9个小时</span></span><br><span class="line">                x[<span class="number">471</span> * i + j].append(data[w][<span class="number">480</span> * i + j + t])</span><br><span class="line">        <span class="comment"># 将第10个小时的值作为实际的PM2.5的值</span></span><br><span class="line">        y.append(data[<span class="number">9</span>][<span class="number">480</span> * i + j + <span class="number">9</span>])</span><br><span class="line">x = np.array(x)</span><br><span class="line">y = np.array(y)</span><br><span class="line"></span><br><span class="line"><span class="comment">#在第一列添上一条全为1的列作为bias</span></span><br><span class="line">x = np.concatenate((np.ones((x.shape[<span class="number">0</span>],<span class="number">1</span>)),x),axis = <span class="number">1</span>) </span><br><span class="line">w = np.zeros(x.shape[<span class="number">1</span>]) <span class="comment">#weight</span></span><br></pre></td></tr></table></figure>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><h3 id="定义loss-function"><a href="#定义loss-function" class="headerlink" title="定义loss function"></a>定义loss function</h3><blockquote>
+<p>使用 error square<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lossFunction</span><span class="params">(target,weight,samples)</span>:</span></span><br><span class="line">    M = target - np.dot(weight,samples.T)</span><br><span class="line">    loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> M:</span><br><span class="line">        loss += m**<span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h3><blockquote>
+<p>使用Adagra 对learning rate进行控制</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">lr = <span class="number">8</span> <span class="comment">#learning rate 设置</span></span><br><span class="line">pre_grad = np.ones(x.shape[<span class="number">1</span>])<span class="comment"># 每个特征有独立的learning rate</span></span><br><span class="line"><span class="keyword">for</span> r <span class="keyword">in</span> range(<span class="number">10000</span>):</span><br><span class="line">    temp_loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> range(<span class="number">36</span>):</span><br><span class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> range(<span class="number">156</span>):</span><br><span class="line">            L = np.dot(w,x[<span class="number">157</span> * m + s].T) - y[<span class="number">157</span> * m + s]</span><br><span class="line">            grad = np.dot(x[<span class="number">157</span> * m + s].T,L)*(<span class="number">2</span>)</span><br><span class="line">            pre_grad += grad**<span class="number">2</span></span><br><span class="line">            ada = np.sqrt(pre_grad)</span><br><span class="line">            w = w - lr * grad/ada</span><br><span class="line">        temp_loss += abs(np.dot(w,x[<span class="number">157</span> * m + <span class="number">156</span>].T) - y[<span class="number">157</span> * m + <span class="number">156</span>])</span><br><span class="line">    print(<span class="string">"%.2f"</span> % (r * <span class="number">100</span> / <span class="number">10000</span>),<span class="string">'% loss:'</span>,<span class="string">"%.4f"</span> % (temp_loss / <span class="number">36</span>))</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>保存 weights<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">np.save(<span class="string">'model.npy'</span>,w)</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><ul>
+<li>加载测试特征数据集(略)</li>
+<li>加载label</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">y = []</span><br><span class="line">rr = <span class="number">0</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'ans.csv'</span>,<span class="string">'r'</span>,encoding = <span class="string">'big5'</span>) <span class="keyword">as</span> ans:</span><br><span class="line">    row = csv.reader(ans,delimiter = <span class="string">','</span>)</span><br><span class="line">    <span class="keyword">for</span> r <span class="keyword">in</span> row:</span><br><span class="line">        <span class="keyword">if</span> rr != <span class="number">0</span>:</span><br><span class="line">            y.append(float(r[<span class="number">1</span>]))</span><br><span class="line">        rr += <span class="number">1</span></span><br><span class="line">y = np.array(y)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>加载weights</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">w = np.load(<span class="string">'model.npy'</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>测试</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">t = np.dot(x,w)</span><br><span class="line">L = t - y</span><br><span class="line">loss = []</span><br><span class="line">sum = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> l <span class="keyword">in</span> L:</span><br><span class="line">    loss.append(abs(l))</span><br><span class="line">    sum += abs(l)</span><br><span class="line">print(sum / len(L))</span><br><span class="line">plt.plot(y,color = <span class="string">"red"</span>,label = <span class="string">'target'</span>)</span><br><span class="line">plt.plot(t,color = <span class="string">"blue"</span>,label = <span class="string">'hypothesis'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'pm 2.5'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="/images/PM25/model_1.png" alt="结论"></p>
+<blockquote>
+<p>PM2.5 误差 <strong>14.427</strong><br><del>参数太多过拟合</del>没有训练好,卡在了某个地方了,training时候的loss也很高</p>
+</blockquote>
+<h2 id="再优化"><a href="#再优化" class="headerlink" title="再优化"></a>再优化</h2><blockquote>
+<p>只取18个特征中的NMHC、NO2、O3、PM10、PM2.5</p>
+</blockquote>
+<p><img src="/images/PM25/model_1.png" alt="model_2"></p>
+<blockquote>
+<p>PM2.5 误差 <strong>8.987</strong><br>一个不错的开头,继续优化</p>
+<p>只考虑PM 10和PM 2.5</p>
+</blockquote>
+<p><img src="/images/PM25/model_3.png" alt="model_3"></p>
+<blockquote>
+<p>PM2.5 误差 <strong>6.281</strong></p>
+</blockquote>
+<blockquote>
+<p>若在删减特征呢?<br>只考虑 PM2.5 </p>
+</blockquote>
+<p><img src="/images/PM25/model_4.png" alt="model_4"></p>
+<blockquote>
+<p>PM2.5 误差 <strong>5.406</strong><br>我服了,之前做的时候是会underfitting导致误差到7.4的,这回倒好更加低了</p>
+</blockquote>
+<h1 id="使用DNN-对PM2-5进行预测"><a href="#使用DNN-对PM2-5进行预测" class="headerlink" title="使用DNN 对PM2.5进行预测"></a>使用DNN 对PM2.5进行预测</h1><blockquote>
+<p>使用的是tensorflow + keras<br>预备工作略</p>
+</blockquote>
+<h2 id="Feature-Scaling"><a href="#Feature-Scaling" class="headerlink" title="Feature Scaling"></a>Feature Scaling</h2><blockquote>
+<p>用了两个不同的Feature Scaling的方法,结果上看差别不大,Standardization更加好一点</p>
+</blockquote>
+<h3 id="Standardization"><a href="#Standardization" class="headerlink" title="Standardization"></a>Standardization</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">standardization</span><span class="params">(dataMatrix)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> dataMatrix.shape[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> dataMatrix</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(dataMatrix.shape[<span class="number">1</span>]):</span><br><span class="line">        sum = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> _x <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            sum += _x[i]</span><br><span class="line">        mean = sum / dataMatrix.shape[<span class="number">0</span>]</span><br><span class="line">        SD = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> _x <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            SD += (_x[i] - mean)**<span class="number">2</span></span><br><span class="line">        SD = np.sqrt(SD / dataMatrix.shape[<span class="number">0</span>])</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">for</span> _x <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            _x[i] = (_x[i] - mean) / SD</span><br><span class="line">    <span class="keyword">return</span> dataMatrix</span><br></pre></td></tr></table></figure>
+<h3 id="Mean-Normalization"><a href="#Mean-Normalization" class="headerlink" title="Mean Normalization"></a>Mean Normalization</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">meanNormalization</span><span class="params">(dataMatrix)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> dataMatrix.shape[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> dataMatrix</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(dataMatrix.shape[<span class="number">1</span>]):</span><br><span class="line">        sum = <span class="number">0</span></span><br><span class="line">        max = <span class="number">0</span></span><br><span class="line">        min = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> data <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            sum += data[i]</span><br><span class="line">            <span class="keyword">if</span> data[i] &gt; max:</span><br><span class="line">                max = data[i]</span><br><span class="line">            <span class="keyword">if</span> data[i] &lt; min:</span><br><span class="line">                min = data[i]</span><br><span class="line">        mean = sum / dataMatrix.shape[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> (max - min) != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">for</span> data <span class="keyword">in</span> dataMatrix:</span><br><span class="line">                data[i] = (data[i] - mean) / (max - min)</span><br><span class="line">    <span class="keyword">return</span> dataMatrix</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">trainX = standardization(trainX)</span><br><span class="line">testX = standardization(testX)</span><br><span class="line"><span class="comment"># trainX = meanNormalization(trainX)</span></span><br><span class="line"><span class="comment"># testX = meanNormalization(testX)</span></span><br></pre></td></tr></table></figure>
+<h2 id="训练-1"><a href="#训练-1" class="headerlink" title="训练"></a>训练</h2><blockquote>
+<p>使用output为8的两层layer,激活函数是ReLU(Sigmoid效果更加差)</p>
+</blockquote>
+<h3 id="建立模型"><a href="#建立模型" class="headerlink" title="建立模型"></a>建立模型</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = keras.Sequential([</span><br><span class="line">    keras.layers.Dense(<span class="number">8</span>, activation=tf.nn.relu),</span><br><span class="line">    keras.layers.Dense(<span class="number">8</span>, activation=tf.nn.relu),</span><br><span class="line">    keras.layers.Dense(<span class="number">1</span>)</span><br><span class="line">    ])</span><br><span class="line">model.compile(loss=<span class="string">"mse"</span>,</span><br><span class="line">        optimizer=tf.train.RMSPropOptimizer(<span class="number">0.001</span>),</span><br><span class="line">        metrics=[<span class="string">'mae'</span>, <span class="string">'mse'</span>])</span><br></pre></td></tr></table></figure>
+<h3 id="训练-2"><a href="#训练-2" class="headerlink" title="训练"></a>训练</h3><blockquote>
+<p>跑100个epochs基本上没什么变化了<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">history = model.fit(trainX, </span><br><span class="line">                    trainY, </span><br><span class="line">                    batch_size = <span class="number">64</span>, </span><br><span class="line">                    epochs = <span class="number">100</span>, </span><br><span class="line">                    validation_split = <span class="number">0.2</span>, </span><br><span class="line">                    verbose=<span class="number">0</span>, </span><br><span class="line">                    callbacks=[PrintDot()])</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>训练时候的loss<br><img src="/images/PM25/loss.png" alt="training_loss"></p>
+</blockquote>
+<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><blockquote>
+<p>loss是<strong>7.47</strong></p>
+</blockquote>
+<p><img src="/images/PM25/dnn.png" alt="test"></p>
+<h2 id="再优化-1"><a href="#再优化-1" class="headerlink" title="再优化"></a>再优化</h2><h3 id="不使用Feature-Scaling"><a href="#不使用Feature-Scaling" class="headerlink" title="不使用Feature Scaling"></a>不使用Feature Scaling</h3><blockquote>
+<p>训练时候的loss<br><img src="/images/PM25/non_fs.png" alt="nonFS"></p>
+</blockquote>
+<blockquote>
+<p>测试时loss是<strong>5.170</strong><br><img src="/images/PM25/non_fs_rs.png" alt="noFSr"></p>
+</blockquote>
+<h3 id="增加layers"><a href="#增加layers" class="headerlink" title="增加layers"></a>增加layers</h3><blockquote>
+<p>增加多一层layer<br>  训练时loss</p>
+</blockquote>
+<p><img src="/images/PM25/3layers_loss.png" alt="3layers"></p>
+<blockquote>
+<p>测试时loss <strong>7.5</strong></p>
+</blockquote>
+<blockquote>
+<p>所以说DNN最优能达到5.17, Linear Model最优5.4<br>不错🎉🎉🎉🎉🎉🎉</p>
+</blockquote>
+<h1 id="Repo"><a href="#Repo" class="headerlink" title="Repo"></a>Repo</h1><p><a href="https://github.com/VIXNESS/machine-learning-course.git" target="_blank" rel="noopener">VIXNESS/machine-learning-course</a></p>
+]]></content>
       <categories>
         <category>machine learning</category>
       </categories>
@@ -36,14 +241,250 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Hello World]]></title>
-    <url>%2F2018%2F12%2F23%2Fhello-world%2F</url>
-    <content type="text"><![CDATA[Hello World! 我回来啦~❕❕❕❕开始写作,更新blog啦 🎉🎉🎉🎉]]></content>
+    <title>Effective Modern C++ 行为习惯列举</title>
+    <url>/2019/05/07/Effective-Modern-C-%E8%A1%8C%E4%B8%BA%E4%B9%A0%E6%83%AF%E5%88%97%E4%B8%BE/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>面向已经掌握了C++11之前的同学, 本文只列举了基本的几条.</p>
+<p>ref: Effective Modern C++</p>
+</blockquote><h2 id="用auto-代替显示声明"><a href="#用auto-代替显示声明" class="headerlink" title="用auto 代替显示声明."></a>用<strong>auto</strong> 代替显示声明.</h2><p>✘ 错误示范:</p><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typename</span> <span class="built_in">std</span>::iterator_traits&lt;It&gt;::value_type currValue = *b;</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">auto</span> currValue = *b;</span><br></pre></td></tr></table></figure>
+<h2 id="使用nullptr-替代NULL-和0"><a href="#使用nullptr-替代NULL-和0" class="headerlink" title="使用nullptr 替代NULL 和0."></a>使用<strong>nullptr</strong> 替代<strong>NULL</strong> 和<strong>0</strong>.</h2><p>✘ 错误示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="number">0</span>)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="literal">NULL</span>)&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="literal">nullptr</span>)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用using-替代typedef"><a href="#使用using-替代typedef" class="headerlink" title="使用using 替代typedef."></a>使用<strong>using</strong> 替代<strong>typedef</strong>.</h2><p>✘ 错误示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;<span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, <span class="built_in">std</span>::<span class="built_in">string</span>&gt;&gt; UPtrMapSS;</span><br></pre></td></tr></table></figure>
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> UPtrMapSS = <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;<span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, <span class="built_in">std</span>::<span class="built_in">string</span>&gt;&gt;;</span><br></pre></td></tr></table></figure>
+<h2 id="有范围的enum-替代无范围的enum"><a href="#有范围的enum-替代无范围的enum" class="headerlink" title="有范围的enum 替代无范围的enum."></a>有范围的<strong>enum</strong> 替代无范围的<strong>enum</strong>.</h2><p>✘ 错误示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">enum</span> Color &#123; black, white, red &#125;;</span><br><span class="line"><span class="keyword">auto</span> white = <span class="literal">false</span>; <span class="comment">//white 已经被声明了, error!</span></span><br></pre></td></tr></table></figure>
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="class"><span class="keyword">class</span> <span class="title">Color</span> &#123;</span> black, white, red &#125;;</span><br><span class="line"><span class="keyword">auto</span> white = <span class="literal">false</span>; <span class="comment">// 一切正常</span></span><br><span class="line">Color c = Color::white; <span class="comment">//规范的声明方式</span></span><br><span class="line"><span class="keyword">auto</span> c = Color::white; <span class="comment">//规范的声明方式</span></span><br></pre></td></tr></table></figure>
+<h2 id="禁用函数时-用delete-替代private"><a href="#禁用函数时-用delete-替代private" class="headerlink" title="禁用函数时, 用delete 替代private."></a>禁用函数时, 用<strong>delete</strong> 替代<strong>private</strong>.</h2><p>✘ 错误示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">basic_ios</span> :</span> <span class="keyword">public</span> ios_base &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	basic_ios(<span class="keyword">const</span> basic_ios&amp; ); </span><br><span class="line">	basic_ios&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> basic_ios&amp;); </span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">basic_ios</span> :</span> <span class="keyword">public</span> ios_base &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	basic_ios(<span class="keyword">const</span> basic_ios&amp; ) = <span class="keyword">delete</span>; </span><br><span class="line">	basic_ios&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> basic_ios&amp;) = <span class="keyword">delete</span>; </span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="使用override-关键字标注-override函数"><a href="#使用override-关键字标注-override函数" class="headerlink" title="使用override 关键字标注 override函数."></a>使用<strong>override</strong> 关键字标注 override函数.</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> &#123;</span> </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">()</span> <span class="keyword">const</span></span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf2</span><span class="params">(<span class="keyword">int</span> x)</span></span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf3</span><span class="params">()</span> &amp;</span>; </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="keyword">const</span></span>; </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span>:</span> <span class="keyword">public</span> Base &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">()</span> override</span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf2</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> x)</span> override</span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf3</span><span class="params">()</span> &amp;&amp; override</span>; <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="keyword">const</span> override</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="使用const-iterators-替代iterators"><a href="#使用const-iterators-替代iterators" class="headerlink" title="使用const_iterators 替代iterators."></a>使用const_iterators 替代iterators.</h2><p>✘ 错误示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; values;</span><br><span class="line">…</span><br><span class="line"><span class="keyword">auto</span> it = <span class="built_in">std</span>::find(values.begin(),values.end(), <span class="number">1983</span>); <span class="comment">//使用begin()和end()</span></span><br><span class="line">values.insert(it, <span class="number">1998</span>);</span><br></pre></td></tr></table></figure>
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; values; </span><br><span class="line">…</span><br><span class="line"><span class="keyword">auto</span> it = <span class="built_in">std</span>::find(values.cbegin(),values.cend(), <span class="number">1983</span>);<span class="comment">//使用cbegin()和cend()</span></span><br><span class="line">values.insert(it, <span class="number">1998</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="如果函数不会抛出异常-使用noexcept进行声明"><a href="#如果函数不会抛出异常-使用noexcept进行声明" class="headerlink" title="如果函数不会抛出异常, 使用noexcept进行声明."></a>如果函数不会抛出异常, 使用<strong>noexcept</strong>进行声明.</h2><p>✘ C++98:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> x)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>✔ C++11:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> x)</span> <span class="keyword">noexcept</span></span>;</span><br></pre></td></tr></table></figure>
+<h2 id="使用智能指针-std-unique-ptr-std-shared-ptr-std-weak-ptr替代传统指针-std-auto-淘汰了别用了"><a href="#使用智能指针-std-unique-ptr-std-shared-ptr-std-weak-ptr替代传统指针-std-auto-淘汰了别用了" class="headerlink" title="使用智能指针 std::unique_ptr, std::shared_ptr,  std::weak_ptr替代传统指针 (std::auto 淘汰了别用了)."></a>使用智能指针 <code>std::unique_ptr</code>, <code>std::shared_ptr</code>,  <code>std::weak_ptr</code>替代传统指针 (<code>std::auto</code> 淘汰了别用了).</h2><h2 id="能用constexpr就用constexpr"><a href="#能用constexpr就用constexpr" class="headerlink" title="能用constexpr就用constexpr."></a>能用constexpr就用constexpr.</h2><h2 id="让常成员函数线程安全-使用std-mutex-或std-atomic-等"><a href="#让常成员函数线程安全-使用std-mutex-或std-atomic-等" class="headerlink" title="让常成员函数线程安全: 使用std::mutex 或std::atomic 等."></a>让<em>常成员函数</em>线程安全: 使用<code>std::mutex</code> 或<code>std::atomic</code> 等.</h2><h2 id="善用右值-Rvalue-语义转移-Move-Semantics-完美转发-Perfect-Forwarding"><a href="#善用右值-Rvalue-语义转移-Move-Semantics-完美转发-Perfect-Forwarding" class="headerlink" title="善用右值[Rvalue], 语义转移[Move Semantics], 完美转发[Perfect Forwarding]"></a>善用右值[<em>Rvalue</em>], 语义转移[<em>Move Semantics</em>], 完美转发[<em>Perfect Forwarding</em>]</h2><h2 id="善用Lambda-表达式"><a href="#善用Lambda-表达式" class="headerlink" title="善用Lambda 表达式"></a>善用Lambda 表达式</h2><h2 id="善用并发编程API"><a href="#善用并发编程API" class="headerlink" title="善用并发编程API"></a>善用并发编程API</h2><h2 id="容器中使用emplace-back-替代push-back"><a href="#容器中使用emplace-back-替代push-back" class="headerlink" title="容器中使用emplace_back(),  替代push_back()"></a>容器中使用<code>emplace_back()</code>,  替代<code>push_back()</code></h2>]]></content>
+      <categories>
+        <category>c++</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2018/12/23/hello-world/</url>
+    <content><![CDATA[<p>Hello World!</p>
+<p>我回来啦~❕❕❕❕<br>开始写作,更新blog啦 🎉🎉🎉🎉</p>
+]]></content>
       <categories>
         <category>life</category>
       </categories>
       <tags>
         <tag>life</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DNN 年收入预测</title>
+    <url>/2018/12/24/%E5%B9%B4%E6%94%B6%E5%85%A5%E9%A2%84%E6%B5%8B/</url>
+    <content><![CDATA[<h1 id="收入预测"><a href="#收入预测" class="headerlink" title="收入预测"></a>收入预测</h1><blockquote>
+<p>通过 职位、婚姻情况、学历、家庭角色、种族、性别对其进行年薪的预测🥳🥳</p>
+</blockquote><h2 id="Data-Set"><a href="#Data-Set" class="headerlink" title="Data Set"></a>Data Set</h2><p><a href="https://github.com/VIXNESS/machine-learning-course/blob/master/winner/train.csv" target="_blank" rel="noopener">Training Data</a></p><p><a href="https://github.com/VIXNESS/machine-learning-course/blob/master/winner/test.csv" target="_blank" rel="noopener">Testing Data</a></p><h2 id="预备工作"><a href="#预备工作" class="headerlink" title="预备工作"></a>预备工作</h2><h3 id="所需类库"><a href="#所需类库" class="headerlink" title="所需类库"></a>所需类库</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> csv</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+<h3 id="数据装载"><a href="#数据装载" class="headerlink" title="数据装载"></a>数据装载</h3><blockquote>
+<p>数据构成: [feature 1, … feature n; &gt;= 50k or &lt; 50k] 😵😵😵<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadData</span><span class="params">(_x, _y, fileName)</span>:</span></span><br><span class="line">    col_1 = [<span class="string">' State-gov'</span>, </span><br><span class="line">              <span class="string">' Self-emp-not-inc'</span>, </span><br><span class="line">              <span class="string">' Private'</span>, </span><br><span class="line">              <span class="string">' Federal-gov'</span>, </span><br><span class="line">              <span class="string">' Local-gov'</span>, </span><br><span class="line">              <span class="string">' ?'</span>, </span><br><span class="line">              <span class="string">' Self-emp-inc'</span>, </span><br><span class="line">              <span class="string">' Without-pay'</span>, </span><br><span class="line">              <span class="string">' Never-worked'</span>]</span><br><span class="line">    col_3 = [<span class="string">' Bachelors'</span>, </span><br><span class="line">              <span class="string">' HS-grad'</span>, </span><br><span class="line">              <span class="string">' 11th'</span>, </span><br><span class="line">              <span class="string">' Masters'</span>, </span><br><span class="line">              <span class="string">' 9th'</span>, </span><br><span class="line">              <span class="string">' Some-college'</span>, </span><br><span class="line">              <span class="string">' Assoc-acdm'</span>, </span><br><span class="line">              <span class="string">' Assoc-voc'</span>, </span><br><span class="line">              <span class="string">' 7th-8th'</span>, </span><br><span class="line">              <span class="string">' Doctorate'</span>, </span><br><span class="line">              <span class="string">' Prof-school'</span>, </span><br><span class="line">              <span class="string">' 5th-6th'</span>, </span><br><span class="line">              <span class="string">' 10th'</span>, </span><br><span class="line">              <span class="string">' 1st-4th'</span>, </span><br><span class="line">              <span class="string">' Preschool'</span>, </span><br><span class="line">              <span class="string">' 12th'</span>]</span><br><span class="line">    col_5 = [<span class="string">' Never-married'</span>, </span><br><span class="line">              <span class="string">' Married-civ-spouse'</span>, </span><br><span class="line">              <span class="string">' Divorced'</span>, </span><br><span class="line">              <span class="string">' Married-spouse-absent'</span>, </span><br><span class="line">              <span class="string">' Separated'</span>, </span><br><span class="line">              <span class="string">' Married-AF-spouse'</span>, </span><br><span class="line">              <span class="string">' Widowed'</span>]</span><br><span class="line">    col_6 = [<span class="string">' Adm-clerical'</span>, </span><br><span class="line">              <span class="string">' Exec-managerial'</span>, </span><br><span class="line">              <span class="string">' Handlers-cleaners'</span>, </span><br><span class="line">              <span class="string">' Prof-specialty'</span>, </span><br><span class="line">              <span class="string">' Other-service'</span>, </span><br><span class="line">              <span class="string">' Sales'</span>, </span><br><span class="line">              <span class="string">' Craft-repair'</span>, </span><br><span class="line">              <span class="string">' Transport-moving'</span>, </span><br><span class="line">              <span class="string">' Farming-fishing'</span>, </span><br><span class="line">              <span class="string">' Machine-op-inspct'</span>, </span><br><span class="line">              <span class="string">' Tech-support'</span>, </span><br><span class="line">              <span class="string">' ?'</span>, </span><br><span class="line">              <span class="string">' Protective-serv'</span>, </span><br><span class="line">              <span class="string">' Armed-Forces'</span>, </span><br><span class="line">              <span class="string">' Priv-house-serv'</span>]</span><br><span class="line">    col_7 = [<span class="string">' Not-in-family'</span>, </span><br><span class="line">              <span class="string">' Husband'</span>, </span><br><span class="line">              <span class="string">' Wife'</span>, </span><br><span class="line">              <span class="string">' Own-child'</span>, </span><br><span class="line">              <span class="string">' Unmarried'</span>, </span><br><span class="line">              <span class="string">' Other-relative'</span>]</span><br><span class="line">    col_8 = [<span class="string">' White'</span>, </span><br><span class="line">              <span class="string">' Black'</span>, </span><br><span class="line">              <span class="string">' Asian-Pac-Islander'</span>, </span><br><span class="line">              <span class="string">' Amer-Indian-Eskimo'</span>, </span><br><span class="line">              <span class="string">' Other'</span>]</span><br><span class="line">    col_9 = [<span class="string">' Male'</span>, <span class="string">' Female'</span>]</span><br><span class="line">    col_13 = [<span class="string">' United-States'</span>, </span><br><span class="line">              <span class="string">' Cuba'</span>, </span><br><span class="line">              <span class="string">' Jamaica'</span>, </span><br><span class="line">              <span class="string">' India'</span>, </span><br><span class="line">              <span class="string">' ?'</span>, </span><br><span class="line">              <span class="string">' Mexico'</span>, </span><br><span class="line">              <span class="string">' South'</span>, </span><br><span class="line">              <span class="string">' Puerto-Rico'</span>, </span><br><span class="line">              <span class="string">' Honduras'</span>, </span><br><span class="line">              <span class="string">' England'</span>, </span><br><span class="line">              <span class="string">' Canada'</span>, </span><br><span class="line">              <span class="string">' Germany'</span>, </span><br><span class="line">              <span class="string">' Iran'</span>, </span><br><span class="line">              <span class="string">' Philippines'</span>, </span><br><span class="line">              <span class="string">' Italy'</span>, </span><br><span class="line">              <span class="string">' Poland'</span>, </span><br><span class="line">              <span class="string">' Columbia'</span>, </span><br><span class="line">              <span class="string">' Cambodia'</span>, </span><br><span class="line">              <span class="string">' Thailand'</span>, </span><br><span class="line">              <span class="string">' Ecuador'</span>, </span><br><span class="line">              <span class="string">' Laos'</span>, </span><br><span class="line">              <span class="string">' Taiwan'</span>, </span><br><span class="line">              <span class="string">' Haiti'</span>, </span><br><span class="line">              <span class="string">' Portugal'</span>, </span><br><span class="line">              <span class="string">' Dominican-Republic'</span>, </span><br><span class="line">              <span class="string">' El-Salvador'</span>, </span><br><span class="line">              <span class="string">' France'</span>, </span><br><span class="line">              <span class="string">' Guatemala'</span>, </span><br><span class="line">              <span class="string">' China'</span>, </span><br><span class="line">              <span class="string">' Japan'</span>, </span><br><span class="line">              <span class="string">' Yugoslavia'</span>, </span><br><span class="line">              <span class="string">' Peru'</span>, </span><br><span class="line">              <span class="string">' Outlying-US(Guam-USVI-etc)'</span>, </span><br><span class="line">              <span class="string">' Scotland'</span>, </span><br><span class="line">              <span class="string">' Trinadad&amp;Tobago'</span>, </span><br><span class="line">              <span class="string">' Greece'</span>, </span><br><span class="line">              <span class="string">' Nicaragua'</span>, </span><br><span class="line">              <span class="string">' Vietnam'</span>, </span><br><span class="line">              <span class="string">' Hong'</span>, </span><br><span class="line">              <span class="string">' Ireland'</span>, </span><br><span class="line">              <span class="string">' Hungary'</span>, </span><br><span class="line">              <span class="string">' Holand-Netherlands'</span>]</span><br><span class="line">    col_14 = [<span class="string">' &lt;=50K'</span>, <span class="string">' &gt;50K'</span>, <span class="string">' &lt;=50K.'</span>, <span class="string">' &gt;50K.'</span>]</span><br><span class="line">    <span class="keyword">with</span> open(fileName) <span class="keyword">as</span> rawData:</span><br><span class="line">        rows = csv.reader(rawData, delimiter = <span class="string">","</span>)</span><br><span class="line">        <span class="keyword">for</span> r <span class="keyword">in</span> rows:</span><br><span class="line">            <span class="keyword">if</span> len(r) == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            temp = []</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">15</span>):</span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">                    temp.append(float(r[i]))</span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">1</span>:</span><br><span class="line">                    cnt = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">for</span> c <span class="keyword">in</span> col_1:</span><br><span class="line">                        <span class="keyword">if</span> c == r[i]:</span><br><span class="line">                            temp.append(float(cnt))</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        cnt += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">2</span>:</span><br><span class="line">                    temp.append(float(r[i]))</span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">3</span>:</span><br><span class="line">                    cnt = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">for</span> c <span class="keyword">in</span> col_3:</span><br><span class="line">                        <span class="keyword">if</span> c == r[i]:</span><br><span class="line">                            temp.append(float(cnt))</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        cnt += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">4</span>:</span><br><span class="line">                    temp.append(float(r[i]))</span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">5</span>:</span><br><span class="line">                    cnt = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">for</span> c <span class="keyword">in</span> col_5:</span><br><span class="line">                        <span class="keyword">if</span> c == r[i]:</span><br><span class="line">                            temp.append(float(cnt))</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        cnt += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">6</span>:</span><br><span class="line">                    cnt = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">for</span> c <span class="keyword">in</span> col_6:</span><br><span class="line">                        <span class="keyword">if</span> c == r[i]:</span><br><span class="line">                            temp.append(float(cnt))</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        cnt += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">7</span>:</span><br><span class="line">                    cnt = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">for</span> c <span class="keyword">in</span> col_7:</span><br><span class="line">                        <span class="keyword">if</span> c == r[i]:</span><br><span class="line">                            temp.append(float(cnt))</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        cnt += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">8</span>:</span><br><span class="line">                    cnt = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">for</span> c <span class="keyword">in</span> col_8:</span><br><span class="line">                        <span class="keyword">if</span> c == r[i]:</span><br><span class="line">                            temp.append(float(cnt))</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        cnt += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">9</span>:</span><br><span class="line">                    cnt = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">for</span> c <span class="keyword">in</span> col_9:</span><br><span class="line">                        <span class="keyword">if</span> c == r[i]:</span><br><span class="line">                            temp.append(float(cnt))</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        cnt += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">10</span> <span class="keyword">or</span> i == <span class="number">11</span> <span class="keyword">or</span> i == <span class="number">12</span>:</span><br><span class="line">                    temp.append(float(r[i]))</span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">13</span>:</span><br><span class="line">                    cnt = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">for</span> c <span class="keyword">in</span> col_13:</span><br><span class="line">                        <span class="keyword">if</span> c == r[i]:</span><br><span class="line">                            temp.append(float(cnt))</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        cnt += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">14</span>:</span><br><span class="line">                    cnt = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">for</span> c <span class="keyword">in</span> col_14:</span><br><span class="line">                        <span class="keyword">if</span> c == r[i]:</span><br><span class="line">                            _y.append(float(cnt % <span class="number">2</span>))</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        cnt += <span class="number">1</span></span><br><span class="line">            _x.append(temp)</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="模型定义"><a href="#模型定义" class="headerlink" title="模型定义"></a>模型定义</h2><h3 id="Feature-Scaling"><a href="#Feature-Scaling" class="headerlink" title="Feature Scaling"></a>Feature Scaling</h3><blockquote>
+<p>4种 Feature Scaling的方法</p>
+</blockquote>
+<h4 id="Standardization"><a href="#Standardization" class="headerlink" title="Standardization"></a>Standardization</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">standardization</span><span class="params">(dataMatrix)</span>:</span> <span class="comment">#🤩🤩🤩</span></span><br><span class="line">    <span class="keyword">if</span> dataMatrix.shape[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> dataMatrix</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(dataMatrix.shape[<span class="number">1</span>]):</span><br><span class="line">        sum = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> _x <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            sum += _x[i]</span><br><span class="line">        mean = sum / dataMatrix.shape[<span class="number">0</span>]</span><br><span class="line">        SD = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> _x <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            SD += (_x[i] - mean)**<span class="number">2</span></span><br><span class="line">        SD = np.sqrt(SD / dataMatrix.shape[<span class="number">0</span>])</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">for</span> _x <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            _x[i] = (_x[i] - mean) / SD</span><br><span class="line">    <span class="keyword">return</span> dataMatrix</span><br></pre></td></tr></table></figure>
+<h4 id="Mean-Normalization"><a href="#Mean-Normalization" class="headerlink" title="Mean Normalization"></a>Mean Normalization</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">meanNormalization</span><span class="params">(dataMatrix)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> dataMatrix.shape[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> dataMatrix</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(dataMatrix.shape[<span class="number">1</span>]):</span><br><span class="line">        sum = <span class="number">0</span></span><br><span class="line">        max = <span class="number">0</span></span><br><span class="line">        min = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> data <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            sum += data[i]</span><br><span class="line">            <span class="keyword">if</span> data[i] &gt; max:</span><br><span class="line">                max = data[i]</span><br><span class="line">            <span class="keyword">if</span> data[i] &lt; min:</span><br><span class="line">                min = data[i]</span><br><span class="line">        mean = sum / dataMatrix.shape[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> (max - min) != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">for</span> data <span class="keyword">in</span> dataMatrix:</span><br><span class="line">                data[i] = (data[i] - mean) / (max - min)</span><br><span class="line">    <span class="keyword">return</span> dataMatrix</span><br></pre></td></tr></table></figure>
+<h4 id="Rescaling"><a href="#Rescaling" class="headerlink" title="Rescaling"></a>Rescaling</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rescaling</span><span class="params">(dataMatrix)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> dataMatrix.shape[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> dataMatrix</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(dataMatrix.shape[<span class="number">1</span>]):</span><br><span class="line">        max = <span class="number">0</span></span><br><span class="line">        min = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> data <span class="keyword">in</span> dataMatrix:</span><br><span class="line">            <span class="keyword">if</span> data[i] &gt; max:</span><br><span class="line">                max = data[i]</span><br><span class="line">            <span class="keyword">if</span> data[i] &lt; min:</span><br><span class="line">                min = data[i]</span><br><span class="line">        <span class="keyword">if</span> max - min != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">for</span> data <span class="keyword">in</span> dataMatrix:</span><br><span class="line">                data[i] = (data[i] - min) / (max - min)</span><br><span class="line">    <span class="keyword">return</span> dataMatrix</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用以上某一种方法对数据进行Feature Scaling<br>经过测试,Standardization的效果最好,其次是 Mean Normalization </p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">trainX = []</span><br><span class="line">trainY = []</span><br><span class="line">testX = []</span><br><span class="line">testY = []</span><br><span class="line">loadData(trainX, trainY, <span class="string">'train.csv'</span>)</span><br><span class="line">loadData(testX, testY, <span class="string">'test.csv'</span>)</span><br><span class="line">trainX = np.array(trainX)</span><br><span class="line">trainY = np.array(trainY)</span><br><span class="line">testX = np.array(testX)</span><br><span class="line">testY = np.array(testY)</span><br><span class="line">trainX = standardization(trainX) <span class="comment">#Test accuracy: 0.8504391622392502</span></span><br><span class="line">testX = standardization(testX)</span><br><span class="line"><span class="comment"># trainX = meanNormalization(trainX) #Test accuracy: 0.8516675879786739</span></span><br><span class="line"><span class="comment"># testX = meanNormalization(testX)</span></span><br><span class="line"><span class="comment"># trainX = rescaling(trainX) #Test accuracy: 0.8477366255400303</span></span><br><span class="line"><span class="comment"># testX = rescaling(testX)</span></span><br></pre></td></tr></table></figure>
+<h3 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h3><h4 id="设计模型"><a href="#设计模型" class="headerlink" title="设计模型"></a>设计模型</h4><blockquote>
+<p>使用两层layers 激活函数 ReLU <del>(就乱设计的)</del> 😅<br>Loss Function 用的是Cross Entropy, 因为使用了ReLU用Square Error会有许多的地方没有梯度,很尴尬🥵</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = tf.keras.Sequential([</span><br><span class="line">    keras.layers.Dense(<span class="number">28</span>, activation=tf.nn.relu),</span><br><span class="line">    keras.layers.Dense(<span class="number">14</span>, activation=tf.nn.relu),</span><br><span class="line">    keras.layers.Dense(<span class="number">2</span>,activation=tf.nn.softmax)</span><br><span class="line">])</span><br><span class="line">model.compile(optimizer=tf.train.AdamOptimizer(), </span><br><span class="line">              loss=<span class="string">'sparse_categorical_crossentropy'</span>, </span><br><span class="line">              metrics=[<span class="string">'accuracy'</span>])</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>训练时的精准度:</p>
+</blockquote>
+<p><img src="/images/Winner/acc.png" alt="acc"></p>
+<blockquote>
+<p>测试精准度:</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">16281/16281 [==============================] - 0s 25us/step</span><br><span class="line">Test loss:  0.3315070253370084   Test accuracy: 0.8466310422863189</span><br></pre></td></tr></table></figure>
+<h2 id="负优化"><a href="#负优化" class="headerlink" title="负优化"></a>负优化</h2><h3 id="取消Feature-Scaling"><a href="#取消Feature-Scaling" class="headerlink" title="取消Feature Scaling"></a>取消Feature Scaling</h3><blockquote>
+<p>很真实  🥵</p>
+</blockquote>
+<p><img src="/images/Winner/nonfs.png" alt="non-fs"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">16281/16281 [==============================] - 0s 24us/step</span><br><span class="line">Test loss:  12.310577790542826   Test accuracy: 0.23622627602315244</span><br></pre></td></tr></table></figure>
+<h3 id="增加layers"><a href="#增加layers" class="headerlink" title="增加layers"></a>增加layers</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = tf.keras.Sequential([</span><br><span class="line">    keras.layers.Dense(<span class="number">28</span>, activation=tf.nn.relu),</span><br><span class="line">    keras.layers.Dense(<span class="number">28</span>, activation=tf.nn.relu),</span><br><span class="line">    keras.layers.Dense(<span class="number">14</span>, activation=tf.nn.relu),</span><br><span class="line">    keras.layers.Dense(<span class="number">2</span>,activation=tf.nn.softmax)</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>没用🤦‍ 🤦‍ 🤷‍ 🤷‍</p>
+</blockquote>
+<p><img src="/images/Winner/more.png" alt="more layer"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">16281/16281 [==============================] - 0s 26us/step</span><br><span class="line">Test loss:  0.33134235454223626   Test accuracy: 0.8481665745274117</span><br></pre></td></tr></table></figure>
+<p>完结🎉🎉🎉</p>
+<h2 id="Repo"><a href="#Repo" class="headerlink" title="Repo"></a>Repo</h2><p><a href="https://github.com/VIXNESS/machine-learning-course/tree/master/winner" target="_blank" rel="noopener">&gt;50K?</a></p>
+]]></content>
+      <categories>
+        <category>machine learning</category>
+      </categories>
+      <tags>
+        <tag>machine learning</tag>
+        <tag>deep learning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>对批判性思维的几点见解</title>
+    <url>/2020/04/20/%E5%87%A0%E7%82%B9%E6%89%B9%E5%88%A4%E6%80%A7%E6%80%9D%E7%BB%B4%E7%9A%84%E8%A7%81%E8%A7%A3/</url>
+    <content><![CDATA[<h1 id="对批判性思维的几点见解"><a href="#对批判性思维的几点见解" class="headerlink" title="对批判性思维的几点见解"></a>对批判性思维的几点见解</h1><h2 id="论点的结构"><a href="#论点的结构" class="headerlink" title="论点的结构"></a>论点的结构</h2><p>对于接触到的大部分论点/结构/观点, 需要对其内核进行分析.</p><p>大部分情况下, 一个<strong>完整</strong>的观点是由</p><p><strong>论题 —— 论据(原因/理由) —— 结论(结果) —— 立场(价值观)</strong></p><p>组成.</p><p>一般情况下, 论点和论据会显式地给出. 而论题和立场可能需要进行推断.</p><a id="more"></a>
+
+
+
+
+<p>单独给出论题的时候, 抛出的是一个开放性的讨论, 只需要包容地去讨论.</p>
+<h2 id="从结论开始切入"><a href="#从结论开始切入" class="headerlink" title="从结论开始切入"></a>从结论开始切入</h2><p>结论和论据出现的先后顺序并不是固定的, 我们必须第一时间抓住他的结论, 然后对结论和论据的关系作出分析.</p>
+<h3 id="确立对方的结论和论据"><a href="#确立对方的结论和论据" class="headerlink" title="确立对方的结论和论据"></a>确立对方的结论和论据</h3><p>有的时候, 对方会先讲一堆理由, 再抛出一个结论, 或者反之.</p>
+<ul>
+<li>对于先讲出理由, 再抛出结论的情况, 我们可以在他陈述完观点后对其进行确认性提问:</li>
+</ul>
+<blockquote>
+<p> “你之所以得出这个结论, 是因为你觉得是….导致的”</p>
+</blockquote>
+<p>提出类似以上的问题以确认对方的论点和论据.</p>
+<ul>
+<li>明确陈述中定义</li>
+</ul>
+<p>有时人们陈述的一些词是关键且模糊、定义不明确的, 或者是很主观的. </p>
+<p>我们需要和对方进行一些关键定义的确认. </p>
+<p>如果是主观的感受, 我们可以确定一个双方认可的范围.</p>
+<blockquote>
+<ul>
+<li>“食堂的饭菜非常难吃, 这是对学生的不负责任”</li>
+</ul>
+<p>你所认为的负责是怎样的? —— 明确他所认为的「责任」定义.</p>
+<ul>
+<li>“这个水果能使得心情变好”</li>
+</ul>
+<p>你觉得的好心情是指?</p>
+</blockquote>
+<h3 id="确立对方价值观-立场-目的"><a href="#确立对方价值观-立场-目的" class="headerlink" title="确立对方价值观/立场/目的"></a>确立对方价值观/立场/目的</h3><p>产生争论的一大重要因素是价值观的不同导致的冲突.</p>
+<p>当一个人提出他的观点, 我们需要推断他的「价值观」、「立场」和「目的」.</p>
+<p>思考是怎样的立场和目的导致他得出的结论.</p>
+<p>若发现是价值观的冲突, 我们会求同存异, 而不是进行激烈的争执.</p>
+<p>改变他人价值观是一件困难的事情, 我们无需对他人价值观进行强行扭转.</p>
+<h3 id="挣脱二元性结论的枷锁"><a href="#挣脱二元性结论的枷锁" class="headerlink" title="挣脱二元性结论的枷锁"></a>挣脱二元性结论的枷锁</h3><p>人们往往喜欢提出「是与非」的结论 —— 不是这样, 就是那样.</p>
+<p>我们的第一反应, 不该是「是」或「非」, 而是把结论进行限定:</p>
+<ul>
+<li>某些时候结论成立与否.</li>
+<li>某些时间成立与否.</li>
+<li>出于某某目的是成立的, 出于其他目的是不成立的.</li>
+<li>讨论利弊</li>
+</ul>
+<p>对问题的结论进行扩充:</p>
+<ul>
+<li>许多问题并不是非黑即白的(折衷性).</li>
+<li>是否有其他解决方案(多面性) —— 解决方案是共存的, 并不是唯一的.</li>
+</ul>
+<h3 id="从原因-立场-目的推出其他结论"><a href="#从原因-立场-目的推出其他结论" class="headerlink" title="从原因/立场/目的推出其他结论"></a>从原因/立场/目的推出其他结论</h3><p><strong>结论的成立是条件性的.</strong></p>
+<p>我们可以通过分析支撑结论的论据, 推导出在特定「目的」、「时间」、「环境」下的其他结论.  </p>
+<p>换句话说, 对结论进行「目的」、「时间」、「环境」等因素的限定.</p>
+<blockquote>
+<p>“我们应该关停所有的网吧, 因为网吧使得青少年沉迷网络.”</p>
+<p>结论: 我们应该关停网吧.</p>
+<p>论据: 网吧会使得青少年沉迷网络.</p>
+<p>根据目的扩充: 目的是为了解决青少年沉迷网络 —— 限制青少年的进入, 使用时长以及引导青少年. </p>
+</blockquote>
+<p><strong>进一步扩充讨论范围.</strong></p>
+<p>明确「论题」, 从论题着手, 看看是否有其他的「解决」方法.</p>
+<p>讨论的核心是<strong>解决问题</strong>, 而不是「争论」.</p>
+<hr>
+<h3 id="分析论据和结论的关系"><a href="#分析论据和结论的关系" class="headerlink" title="分析论据和结论的关系"></a>分析论据和结论的关系</h3><p>完成确立结论和论据的步骤之后, 我们对论据和结论进行关系分析.</p>
+<ol>
+<li><p>相关性检查: 这个这个论据和结论相关吗? </p>
+<ul>
+<li><p>人们最容易犯的错误, 将两个无关的东西绑定在一起.</p>
+</li>
+<li><p>人们很容易犯这种错误, 应首先对其进行检查.</p>
+</li>
+</ul>
+</li>
+<li><p>因果性检查: 论据和结论是因果关系么? 是不是其他原因导致的? 是不是和其他原因共同作用导致的? </p>
+<ol>
+<li>可以使用原因替换的方法, 思考其陈述的原因是否是其结论的直接/主要/决定性的.</li>
+<li>想想是否会是其他原因导致的结果, 或其陈述的原因并非是与其结论有因果关系.</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="常见的谬误"><a href="#常见的谬误" class="headerlink" title="常见的谬误"></a>常见的谬误</h2><ul>
+<li>民调, 大众观点便是正确的 —— 真理既不在多数人手里, 也不在少数人手里, 真理是客观存在, 与人无关.</li>
+<li>只有完美解决某个问题的方法才能被接受, 否则就全盘否定它.</li>
+<li>扣帽子 —— 因为他做了A这件事, 所以他就是那类人.</li>
+<li>推导蔓延 —— 因为他做了A这件事, 所以他也会做B这件事. (禁止作为有效论据)</li>
+</ul>
+<p>大方向: 无充分证据表明, 则不相信其论点.</p>
+<hr>
+<h2 id="谨防真假参半的论证"><a href="#谨防真假参半的论证" class="headerlink" title="谨防真假参半的论证"></a>谨防真假参半的论证</h2><blockquote>
+<p>十句话, 九句是真的, 一句是假的.</p>
+</blockquote>
+<ul>
+<li>来源确认.</li>
+<li>统计学确认.</li>
+<li>专家身份确认.</li>
+</ul>
+<hr>
+<h2 id="批判思维对自我的批判"><a href="#批判思维对自我的批判" class="headerlink" title="批判思维对自我的批判"></a>批判思维对自我的批判</h2><ul>
+<li>慢思考: 思考多个可能存在的结论, 而不是急于证明自己想到的第一个观点.</li>
+<li>尽可能的超越自己的立场和价值观, 思考反对者等其他方面的观点及其理由.</li>
+<li>检查自己所用的定义是否精准, 明确自己的目的, 通过目的推演多个候选结论.</li>
+<li>通过结论检查自己的论据/原因, 是否是唯一决定结论的: <ul>
+<li>很多时候你的因素不是决定性的, 而是导致结论的因素「之一」.</li>
+<li>可能根本就不是原因之一.</li>
+</ul>
+</li>
+<li>结论很可能是非二元的:<ul>
+<li>折衷的 —— 并不是非黑即白的.</li>
+<li>多面的 —— 结论具有多面性, 结论「不唯一」, 更可能是多结论共存的.</li>
+</ul>
+</li>
+<li>慎用类比, 类比会含潜在条件, 与原本的条件不一致.</li>
+<li>谨慎的目标性论证: 「先定义一个目标, 再通过各种证据去支撑它」, 这样做会因为其目的性导致论证的片面, 需要慎重, 多思考<em>多面性</em>和<em>反面性</em>.</li>
+<li>禁止蔓延式的推导: 因为事件A的发生, 事件B也会发生, 事件C也会发生. (可以考虑可能性, 禁止作为论据).</li>
+<li>敢于说出「不知道」: <ul>
+<li>对一个事物的不了解, 并不一定个人能力的问题.</li>
+<li>而往往是当前无法获得充分的证据来支撑任何论点. </li>
+<li>不妄下断言是谨慎的表现.</li>
+</ul>
+</li>
+<li>批判性思维并不是为了和别人针锋相对, 恰恰相反, 要抱着学习和交流的心态进行交流.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>others</category>
+      </categories>
+      <tags>
+        <tag>misc</tag>
       </tags>
   </entry>
 </search>
