@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png?v=7.3.0">
+  <link rel="manifest" href="/images/favicons/site.webmanifest">
+  <meta name="msapplication-config" content="/images/favicons/browserconfig.xml">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":true,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="高性能MySQL 笔记表列过多的列由于MySQL的存储层与通信层之间使用的缓冲格式是列缓冲的, 过多的列转行导致开销增大.范式 1NF: 列具有原子性,  不可拆分. 2NF: 在满足第一范式（1NF）的基础上, 每一个非码属性（不在主键中的列）都必须完全函数依赖于 候选码. 若某些非主属性不依赖于候选码, 那么会不符合2NF. 3NF: 在满足第二范式（2NF）的基础上, 每个非主属性不依赖于其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL Note">
+<meta property="og:url" content="http://meolin.net/2020/07/31/MySQL-Note/index.html">
+<meta property="og:site_name" content="喵灵">
+<meta property="og:description" content="高性能MySQL 笔记表列过多的列由于MySQL的存储层与通信层之间使用的缓冲格式是列缓冲的, 过多的列转行导致开销增大.范式 1NF: 列具有原子性,  不可拆分. 2NF: 在满足第一范式（1NF）的基础上, 每一个非码属性（不在主键中的列）都必须完全函数依赖于 候选码. 若某些非主属性不依赖于候选码, 那么会不符合2NF. 3NF: 在满足第二范式（2NF）的基础上, 每个非主属性不依赖于其">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-07-31T04:04:10.950Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL Note">
+<meta name="twitter:description" content="高性能MySQL 笔记表列过多的列由于MySQL的存储层与通信层之间使用的缓冲格式是列缓冲的, 过多的列转行导致开销增大.范式 1NF: 列具有原子性,  不可拆分. 2NF: 在满足第一范式（1NF）的基础上, 每一个非码属性（不在主键中的列）都必须完全函数依赖于 候选码. 若某些非主属性不依赖于候选码, 那么会不符合2NF. 3NF: 在满足第二范式（2NF）的基础上, 每个非主属性不依赖于其">
+  <link rel="canonical" href="http://meolin.net/2020/07/31/MySQL-Note/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>MySQL Note | 喵灵</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">喵灵</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">meolin</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+
+  <a href="https://github.com/vixness" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://meolin.net/2020/07/31/MySQL-Note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jiang Tao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="喵灵">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">MySQL Note
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-31 12:04:08 / 修改时间：12:04:10" itemprop="dateCreated datePublished" datetime="2020-07-31T12:04:08+08:00">2020-07-31</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="高性能MySQL-笔记"><a href="#高性能MySQL-笔记" class="headerlink" title="高性能MySQL 笔记"></a>高性能MySQL 笔记</h1><h2 id="表"><a href="#表" class="headerlink" title="表"></a>表</h2><h3 id="列"><a href="#列" class="headerlink" title="列"></a>列</h3><h4 id="过多的列"><a href="#过多的列" class="headerlink" title="过多的列"></a>过多的列</h4><p>由于MySQL的存储层与通信层之间使用的缓冲格式是列缓冲的, 过多的列转行导致开销增大.</p><h3 id="范式"><a href="#范式" class="headerlink" title="范式"></a>范式</h3><ul>
+<li>1NF: 列具有原子性,  不可拆分.</li>
+<li>2NF: 在满足第一范式（1NF）的基础上, 每一个非码属性（不在主键中的列）都必须<strong>完全函数依赖于</strong> <em>候选码</em>. 若某些非主属性不依赖于候选码, 那么会不符合2NF.</li>
+<li>3NF: 在满足第二范式（2NF）的基础上, 每个非主属性不依赖于其它非主属性, 即在2NF基础上，消除非码属性对候选码的传递函数依赖.(即所有非主属性对主属性直接依赖, 不能传递地依赖.)</li>
+<li>BCNF: 非主属性不能对主属性部分依赖.</li>
+</ul><a id="more"></a>
+
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><h4 id="VARCHAR-vs-CHAR"><a href="#VARCHAR-vs-CHAR" class="headerlink" title="VARCHAR vs. CHAR"></a>VARCHAR vs. CHAR</h4><ul>
+<li>varchar 保留尾部空格, char不保留.</li>
+<li>varchar 适用于字符串长度方差大的.</li>
+<li>varchar 省空间但是update成本高.</li>
+</ul>
+<h4 id="BLOB-amp-TEXT"><a href="#BLOB-amp-TEXT" class="headerlink" title="BLOB &amp; TEXT"></a>BLOB &amp; TEXT</h4><ul>
+<li>都是存储指针, 需要二次访问.</li>
+<li>可以做索引, 但是必须给出前缀长度.</li>
+</ul>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><h3 id="A-C-I-D"><a href="#A-C-I-D" class="headerlink" title="A.C.I.D."></a>A.C.I.D.</h3><ul>
+<li>Atomicity（原子性）：一个事务（transaction）中的所有操作，或者全部完成，或者全部不完成，不会结束在中间某个环节。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。即，事务不可分割、不可约简。</li>
+<li>Consistency（一致性）：在事务开始之前和事务结束以后，数据库的完整性没有被破坏。这表示写入的资料必须完全符合所有的预设约束、触发器、级联回滚等。</li>
+<li>Isolation（隔离性）：数据库允许多个并发事务同时对其数据进行读写和修改的能力，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据的不一致。事务隔离分为不同级别，包括未提交读（Read uncommitted）、提交读（read committed）、可重复读（repeatable read）和串行化（Serializable）。</li>
+<li>Durability（持久性）：事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>出现的问题</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>脏读</td>
+<td>读取了其他事务未提交的数据, 导致数据错误.</td>
+<td>改为提交读. —— 只能读取事务提交后的数据.</td>
+</tr>
+<tr>
+<td>不可重复读</td>
+<td>一个对同一数据的两次查询之间, 另一个事务做出了修改, 导致前后不一致.</td>
+<td>改为可重复读. —— 使用 X, S锁.</td>
+</tr>
+<tr>
+<td>幻读</td>
+<td>查询结果为多个记录的时候, 前后两次这样的查询之间, 插入了新的记录, 导致前后结果不一致</td>
+<td>串行化 或 Next-Key Lock</td>
+</tr>
+<tr>
+<td>更新丢失</td>
+<td>两个事务同时对同一个数据进行更新操作, 其中在read-and-write阻塞, 尽管加S, X锁仍然导致错误.</td>
+<td>串行化.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>更新丢失出现, 有可能并非事务隔离能避免的.</p>
+<p>例如现在两个程序端, 同时对同一个人取款. 初始1000, 事务一取 100块, 事务二取 1 块.</p>
+<p>共计取了101, 应该为899元, 结果却为999元.</p>
+<p>串行化可以解决此类问题.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line">participant transactionI</span><br><span class="line">participant transactionII</span><br><span class="line">participant row</span><br><span class="line">transactionI -&gt;&gt; row: lock S-Lock, query 1000</span><br><span class="line">transactionII -&gt;&gt; row: lock S-Lock, query 1000</span><br><span class="line">transactionI -&gt;&gt; row: unlock S-Lock</span><br><span class="line">transactionII -&gt;&gt; row: unlock S-Lock</span><br><span class="line">transactionI -&gt;&gt; transactionI: 1000 - 100 = 900</span><br><span class="line">transactionII -&gt;&gt; transactionII: 1000 - 1 = 999</span><br><span class="line">transactionI -&gt;&gt; row: lock X-Lock</span><br><span class="line">transactionII -&gt;&gt; row: lock X-Lock</span><br><span class="line">row --&gt;&gt; transactionII: block</span><br><span class="line">transactionI -&gt;&gt; row: update row = 900</span><br><span class="line">transactionI -&gt;&gt; row: unlock X-Lock</span><br><span class="line">row --&gt;&gt; transactionII: awake</span><br><span class="line">transactionII -&gt;&gt; row: update row = 999</span><br><span class="line">transactionII -&gt;&gt; row: unlock X-Lock</span><br></pre></td></tr></table></figure>
+<h4 id="事务分类"><a href="#事务分类" class="headerlink" title="事务分类"></a>事务分类</h4><ul>
+<li><p>扁平事务</p>
+</li>
+<li><p>带保存点的扁平事务</p>
+</li>
+<li><p>链事务</p>
+</li>
+<li><p>嵌套事务</p>
+</li>
+</ul>
+<h4 id="事务陷阱"><a href="#事务陷阱" class="headerlink" title="事务陷阱"></a>事务陷阱</h4><ul>
+<li>自动回滚 —— 自动回滚不会抛出异常, 无法知道异常. (SQL Server 会抛出异常, 这个是MySQL特有的缺点)</li>
+<li>自动提交.</li>
+<li>在循环中提交 —— 意外导致在未知位置终止, 无法还原.</li>
+</ul>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><h4 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h4><h5 id="共享锁-独占锁"><a href="#共享锁-独占锁" class="headerlink" title="共享锁, 独占锁"></a>共享锁, 独占锁</h5><ul>
+<li>允许多个事务读同一行.</li>
+<li>当事务对同一行进行写操作, 将阻塞其他所有事务的读、写操作.</li>
+</ul>
+<h4 id="行锁算法"><a href="#行锁算法" class="headerlink" title="行锁算法"></a>行锁算法</h4><h5 id="Record-Lock"><a href="#Record-Lock" class="headerlink" title="Record Lock"></a>Record Lock</h5><p>单一行锁.</p>
+<h5 id="Gap-Lock"><a href="#Gap-Lock" class="headerlink" title="Gap Lock"></a>Gap Lock</h5><p>锁定一个区间, 但是不包括该记录本身.</p>
+<h5 id="Next-Key-Lock"><a href="#Next-Key-Lock" class="headerlink" title="Next-Key Lock"></a>Next-Key Lock</h5><p>锁定该记录本身, 并且锁定包含它的一个范围.</p>
+<h4 id="粒度锁"><a href="#粒度锁" class="headerlink" title="粒度锁"></a>粒度锁</h4><h5 id="意向锁-树状锁"><a href="#意向锁-树状锁" class="headerlink" title="意向锁 :  树状锁"></a>意向锁 :  树状锁</h5><p>锁的结构呈树状, 粗粒度锁拥有几个粒度细的锁.</p>
+<p>叶子的粒度细, 父节点的粒度粗.</p>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h3 id="索引的相关理论"><a href="#索引的相关理论" class="headerlink" title="索引的相关理论"></a>索引的相关理论</h3><h4 id="最左前缀匹配"><a href="#最左前缀匹配" class="headerlink" title="最左前缀匹配"></a>最左前缀匹配</h4><p>MySQL引擎采用最左前缀匹配的机制, 可以高效从左匹配.</p>
+<p>所以最左端是模糊查询的时候, 最左前缀匹配失效, 导致性能降低.</p>
+<h4 id="可选择性"><a href="#可选择性" class="headerlink" title="可选择性"></a>可选择性</h4><p>可选择性的意思是, 针对某一字段查询出的结果, 对于这个的分区度.(这一字段的重复程度)</p>
+<blockquote>
+<p>例如, 性别的区分度就很低: 根据某个性别查询出的结果, 性别的区分度及其低. </p>
+<p>再如, 年龄、城市的区分度稍稍高于性别的区分度.</p>
+<p>最高的区分度莫过于ID之类的字段. 其是唯一的, 所以它的可选择性及高.</p>
+</blockquote>
+<p>解决可选择性低的方法是, 将几个可选择性低的字段使用多列索引组合起来, 让其可区分度上升.</p>
+<h4 id="聚集索引-vs-辅助索引"><a href="#聚集索引-vs-辅助索引" class="headerlink" title="聚集索引 vs. 辅助索引"></a>聚集索引 vs. 辅助索引</h4><ul>
+<li>聚集索引: 也称主码索引, 使用主码建立的索引, 直接指向数据.</li>
+<li>辅助索引: 非主码索引, 该索引指向主码. 先用该索引定位主码, 再用主码定位数据.</li>
+</ul>
+<h3 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a>聚簇索引</h3><p>将某一列相同相近的记录排在一起, 进行索引.</p>
+<blockquote>
+<p>其提高了I/O密集型的性能, 相关数据保存在一起.</p>
+</blockquote>
+<h4 id="聚簇-vs-可选择性-——-UUID-vs-自增ID的选择及UUID的优化"><a href="#聚簇-vs-可选择性-——-UUID-vs-自增ID的选择及UUID的优化" class="headerlink" title="聚簇 vs 可选择性 —— UUID vs. 自增ID的选择及UUID的优化"></a>聚簇 vs 可选择性 —— UUID vs. 自增ID的选择及UUID的优化</h4><ul>
+<li>UUID应该使用UNHEX存储在Binary(16)中, 而不是用字符串存储.</li>
+<li>UUID的引入, 导致了索引的随机性大大增加, 索引占用空间变大.</li>
+<li>因为UUID是随机的,  每一页都是随机填充的, 导致页内碎片变多. 而且因为写入是乱序的, 导致频繁的页分裂.</li>
+<li>UUID是随机的, 导致大量的随机I/O, 性能大幅下降.</li>
+<li>自增ID会有自增锁, 频繁的锁也会导致阻塞. </li>
+<li>自增PK会成为热点数据, 并发插入导致<strong>间隙竞争</strong>可以考虑修改<code>innodb_autoinc_lock_mode</code> 进行优化.</li>
+</ul>
+<blockquote>
+<p> 折中方案:</p>
+<p>使用前缀顺序+后缀随机的组合式ID可以达到这两种极端的综合.</p>
+</blockquote>
+<h3 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h3><p>为了解决可选择性过低的问题, 多个选择性低的字段, 可用多列索引组合起来, 提高可选择性, 这就是多列索引.</p>
+<p>但是选择性高的字段组合起来, 会增加负担.</p>
+<blockquote>
+<p>例如有一些待查询的列: &lt;性别,  年龄, 城市&gt;</p>
+<ul>
+<li>性别的可选择性最低, 因为查询出的人性别无非就几种, 这列的查询结果重复度极高.</li>
+<li>其次, 年龄一般在0~99之间集中分布,  重复读虽然低于性别, 但是几十万的数据集中分布在0~99这个区间, 重复度也不低.</li>
+<li>同理, 城市的区分度高于前两者, 但是可选择性也是一般.</li>
+</ul>
+<p>此时, 可以建立一个多列索引, 将这三个可选择性低的列绑成一个多列索引, 可以大大提高可选择性.</p>
+</blockquote>
+<h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引***"></a>覆盖索引***</h3><blockquote>
+<p>如果一个索引覆盖了查询字段的所有值, 那么称其为覆盖索引.</p>
+</blockquote>
+<p>优点:</p>
+<ul>
+<li>索引条目少.</li>
+<li>索引按照列值存储, 使用顺序的磁盘I/O; 少次的顺序I/O比多次的随机I/O性能好.</li>
+</ul>
+<p><strong>索引失效情况</strong></p>
+<ul>
+<li>索引没有覆盖到查询列. —— <strong>使用延迟查询解决.</strong></li>
+<li>MySQL5.5 之后可以使用最左前缀匹配的Like查询, 但是非最左前缀匹配的模糊查询将使得索引失效.</li>
+<li>ORDER BY, GROUP BY所用的列未索引覆盖, 导致无法索引排序.</li>
+</ul>
+<h3 id="索引排序"><a href="#索引排序" class="headerlink" title="索引排序***"></a>索引排序***</h3><blockquote>
+<p>利用索引对数据进行排序.</p>
+</blockquote>
+<p>针对 ORDER BY和GROUP BY</p>
+<ul>
+<li>只有当查询的列顺序和排序的列顺序相同, 且排序方向相同(都是升序或都是降序), MySQL才会对其进行索引排序.</li>
+<li>关联多表的ORDER BY、GROUP BY引用的字段必须全部为首张表, 才会触发索引排序.</li>
+<li>必须满足最左前缀匹配.</li>
+<li>范围查询中的列与ORDER BY、GROUP BY中的列要一致, 才能出发索引排序.</li>
+</ul>
+<h3 id="冗余索引"><a href="#冗余索引" class="headerlink" title="冗余索引"></a>冗余索引</h3><blockquote>
+<p>若有索引$(A,B)$ 之后又出现了 索引$(A)$ , 则 $(A)$ 是$(A,B)$的索引.</p>
+<p>但$(A)$不是$(B,A)$ 的索引.</p>
+</blockquote>
+<p>因为索引多, 虽然查询快, 但是插入慢(需要维护索引的成本变高). 冗余、重复的索引会降低性能.</p>
+<h3 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h3><blockquote>
+<p>EXPLAIN中的extra字段可显示. 指检索数据的方式.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Extra</th>
+<th>意思</th>
+<th>可能出现的情况</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>using index</td>
+<td>使用索引</td>
+<td>覆盖索引, 高效.</td>
+</tr>
+<tr>
+<td>using where</td>
+<td>存储引擎收到记录后进行过滤</td>
+<td>索引未覆盖, 或部分覆盖.</td>
+</tr>
+<tr>
+<td>using condition</td>
+<td>使用条件</td>
+<td>查询会先条件过滤索引，过滤完索引后找到所有符合索引条件的数据行，<br>随后用 WHERE 子句中的其他条件去过滤这些数据行.</td>
+</tr>
+<tr>
+<td>using filesort</td>
+<td>使用文件排序</td>
+<td>无法利用索引完成的排序操作称为“文件排序”.</td>
+</tr>
+<tr>
+<td>using temporary</td>
+<td>使用临时表</td>
+<td>需要使用临时表来存储结果集，常见于排序和分组查询.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="三星索引"><a href="#三星索引" class="headerlink" title="三星索引"></a>三星索引</h3><table>
+<thead>
+<tr>
+<th>星级</th>
+<th>定义</th>
+<th>原理</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🌟</td>
+<td>这个索引与一个查询相关的索引行是相邻的, 或者是相近的</td>
+<td>它最小化了必须扫描的索引片的宽度</td>
+<td>把 WHERE 后的等值条件列作为索引最开头的列</td>
+</tr>
+<tr>
+<td>🌟🌟</td>
+<td>索引行的顺序与查询语句的需求一致</td>
+<td>排除了排序操作</td>
+<td>ORDER BY的列都在索引中, 且与查询顺序一致</td>
+</tr>
+<tr>
+<td>🌟🌟🌟</td>
+<td>如果索引行中包含查询语句中的所有列</td>
+<td>覆盖索引</td>
+<td>实现覆盖索引</td>
+</tr>
+</tbody>
+</table>
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><blockquote>
+<p>查询变慢的原因包括但不限于:</p>
+<ul>
+<li>返回了过多的数据.</li>
+<li>返回了不需要的列.</li>
+</ul>
+</blockquote>
+<h3 id="扫描类型"><a href="#扫描类型" class="headerlink" title="扫描类型"></a>扫描类型</h3><blockquote>
+<p>使用EXPLAIN语句可以查看该查询的扫描类型, 在type字段. 指检索数据的集合.</p>
+<p>性能高低:</p>
+<p>常数引用  &gt; 唯一索引查询 &gt; 范围扫描 &gt; 索引扫描 &gt; 全表扫描</p>
+</blockquote>
+<p>扫描类型</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">名称</th>
+<th>成因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center">全表扫描</td>
+<td>查询扫描了全部整个表, 性能最低</td>
+</tr>
+<tr>
+<td style="text-align:center">index</td>
+<td style="text-align:center">索引全扫描</td>
+<td>查询扫描了整个索引</td>
+</tr>
+<tr>
+<td style="text-align:center">range</td>
+<td style="text-align:center">索引范围扫描</td>
+<td>是范围查询</td>
+</tr>
+<tr>
+<td style="text-align:center">ref</td>
+<td style="text-align:center">非唯一索引扫描</td>
+<td>非唯一索引或者使用了最左前缀匹配</td>
+</tr>
+<tr>
+<td style="text-align:center">eq_ref</td>
+<td style="text-align:center">唯一索引扫描</td>
+<td>一般出现在多表连接时使用primary key或者unique index作为关联条件</td>
+</tr>
+<tr>
+<td style="text-align:center">const,system</td>
+<td style="text-align:center">单表最多有一个匹配行</td>
+<td>出现在根据主键primary key, 或者唯一索引 unique index 进行的查询</td>
+</tr>
+<tr>
+<td style="text-align:center">NULL</td>
+<td style="text-align:center">不用扫描表或索引</td>
+<td>不用访问表或者索引，直接就能够得到结果</td>
+</tr>
+</tbody>
+</table>
+<h3 id="简单查询-vs-复杂查询"><a href="#简单查询-vs-复杂查询" class="headerlink" title="简单查询 vs. 复杂查询"></a>简单查询 vs. 复杂查询</h3><p>如果条件允许, 应该使用多个简单查询替代一个复杂查询. </p>
+<p>这样的查询结果很高效, 而且还能将查询结果缓存.</p>
+<h3 id="关联查询"><a href="#关联查询" class="headerlink" title="关联查询"></a>关联查询</h3><p>MySQL的关联查询是一个左长臂二叉树, 而不是AVL树. 大量的联合查询导致左子树呈现出线性的特征, 导致效率低下.</p>
+<p>需要避免过多的多表查询, 或者手动优化JOIN的方式, 使查询树的高度变低.</p>
+<p>​                   JOIN</p>
+<p>​                /          \</p>
+<p>​            JOIN     table4</p>
+<p>​          /        \</p>
+<p>​     JOIN     table3</p>
+<p>   /        \</p>
+<p>table1  table2</p>
+<h3 id="延迟关联"><a href="#延迟关联" class="headerlink" title="延迟关联"></a>延迟关联</h3><p>若在查询中有索引无法覆盖的列, 应该拆分出来成为一个子查询, 使用例如left outer/inner join进行连接后查询.</p>
+<blockquote>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; SELECT id, description from tableA order by title limit 50,5; -- title没有索引覆盖</span><br><span class="line">&gt; -- 化为</span><br><span class="line">&gt; SELECT id, decription from tableA inner join (SELECT id from tableA order by title) as tmp USING(id); -- 缩小非索引覆盖的范围. 子查询只查pk.</span><br><span class="line">&gt; </span><br><span class="line">&gt; SELECT id, cu_id, name, info, biz_type, gmt_create, gmt_modified,start_time, end_time, market_type, back_leaf_category,item_status,picuture_url FROM relation where biz_type =&apos;0&apos; AND end_time &gt;=&apos;2014-05-29&apos; ORDER BY id asc LIMIT 149420 ,20;</span><br><span class="line">&gt; </span><br><span class="line">&gt; SELECT a.* FROM relation a, (select id from relation where biz_type =&apos;0&apos; AND end_time &gt;=&apos;2014-05-29&apos; ORDER BY id asc LIMIT 149420 ,20 ) b where using(id)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+</blockquote>
+<h3 id="可选择性-amp-WHERE的优化"><a href="#可选择性-amp-WHERE的优化" class="headerlink" title="可选择性 &amp; WHERE的优化"></a>可选择性 &amp; WHERE的优化</h3><ul>
+<li><p>可选择性高的列放在前查询, 查询结果基数降低, 可以提高性能.</p>
+</li>
+<li><p>所以, WHERE <strong>精确值查询</strong>{可选择性高, …, 可选择性低}  + <strong>范围查询</strong>{可选择性高(例如IN语句), &gt;&lt; !=,…, 可选择性低(区分度低的列)}</p>
+</li>
+<li><p>索引未覆盖的列应该进行拆分, 进行延迟关联.</p>
+</li>
+</ul>
+<h3 id="范围查询"><a href="#范围查询" class="headerlink" title="范围查询"></a>范围查询</h3><p>避免多个范围查询: MySQL无法同时使用两个范围查询的索引.</p>
+<p>使用IN()替代范围查询, 会提高效率.</p>
+<h3 id="IN-amp-EXIST"><a href="#IN-amp-EXIST" class="headerlink" title="IN() &amp; EXIST()"></a>IN() &amp; EXIST()</h3><ul>
+<li>EXITS的可以使得查询提前结束, 从而提高效率.</li>
+<li>使用IN效率高于比较符号. 但是IN的代价很高, IN()中的值最好不要过多. 因为IN()会对其内部的值进行一个全排列. 例如IN()中写了4个值, 那么其就要对这4个值做一个全排列$4! = 24$ , 可以看出, 这个代价是连乘积复杂度, IN()也并非银弹.</li>
+<li>OUTER JOIN的效率 &gt; EXITS的效率 &gt; INNER JOIN的效率.</li>
+</ul>
+<h3 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h3><ul>
+<li>由于MySQL引擎的原因, 子查询效果很差, 使用left outer join的方式替代, 可以提升性能.</li>
+<li>IN()中的子查询效率比EXIST()的子查询低很多, 最好别用IN子查询, 应该优先使用EXIST子查询. (MySQL查询引擎缺陷导致的问题)</li>
+</ul>
+<h3 id="UNION优化"><a href="#UNION优化" class="headerlink" title="UNION优化"></a>UNION优化</h3><ul>
+<li>order by / limit语句写在每个union的子查询中, 而不是最后再order by / limit.</li>
+</ul>
+<h3 id="LIMIT优化"><a href="#LIMIT优化" class="headerlink" title="LIMIT优化"></a>LIMIT优化</h3><ul>
+<li>延迟关联</li>
+<li><del>使用between and 语句代替比较符号.</del></li>
+</ul>
+<h2 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h2><blockquote>
+<p>分区也并非银弹.</p>
+</blockquote>
+<ul>
+<li>所有对分区的操作, 第一步都会锁住分区的底层表, 然后判定操作范围, 解锁操作范围之外的分区, 再做相应的操作,.</li>
+<li>B-Tree索引将失效.</li>
+<li>索引维护极高.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/07/31/Java-Note/" rel="next" title="Java Note">
+                  <i class="fa fa-chevron-left"></i> Java Note
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jiang Tao</p>
+  <div class="site-description motion-element" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#高性能MySQL-笔记"><span class="nav-number">1.</span> <span class="nav-text">高性能MySQL 笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#表"><span class="nav-number">1.1.</span> <span class="nav-text">表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#列"><span class="nav-number">1.1.1.</span> <span class="nav-text">列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#过多的列"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">过多的列</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#范式"><span class="nav-number">1.1.2.</span> <span class="nav-text">范式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据类型"><span class="nav-number">1.1.3.</span> <span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#VARCHAR-vs-CHAR"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">VARCHAR vs. CHAR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BLOB-amp-TEXT"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">BLOB &amp; TEXT</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number">1.2.</span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-C-I-D"><span class="nav-number">1.2.1.</span> <span class="nav-text">A.C.I.D.</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#事务分类"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">事务分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#事务陷阱"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">事务陷阱</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#锁"><span class="nav-number">1.2.2.</span> <span class="nav-text">锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#行锁"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">行锁</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#共享锁-独占锁"><span class="nav-number">1.2.2.1.1.</span> <span class="nav-text">共享锁, 独占锁</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#行锁算法"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">行锁算法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Record-Lock"><span class="nav-number">1.2.2.2.1.</span> <span class="nav-text">Record Lock</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Gap-Lock"><span class="nav-number">1.2.2.2.2.</span> <span class="nav-text">Gap Lock</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Next-Key-Lock"><span class="nav-number">1.2.2.2.3.</span> <span class="nav-text">Next-Key Lock</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#粒度锁"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">粒度锁</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#意向锁-树状锁"><span class="nav-number">1.2.2.3.1.</span> <span class="nav-text">意向锁 :  树状锁</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引"><span class="nav-number">1.3.</span> <span class="nav-text">索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#索引的相关理论"><span class="nav-number">1.3.1.</span> <span class="nav-text">索引的相关理论</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最左前缀匹配"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">最左前缀匹配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可选择性"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">可选择性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#聚集索引-vs-辅助索引"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">聚集索引 vs. 辅助索引</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#聚簇索引"><span class="nav-number">1.3.2.</span> <span class="nav-text">聚簇索引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#聚簇-vs-可选择性-——-UUID-vs-自增ID的选择及UUID的优化"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">聚簇 vs 可选择性 —— UUID vs. 自增ID的选择及UUID的优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多列索引"><span class="nav-number">1.3.3.</span> <span class="nav-text">多列索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#覆盖索引"><span class="nav-number">1.3.4.</span> <span class="nav-text">覆盖索引***</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引排序"><span class="nav-number">1.3.5.</span> <span class="nav-text">索引排序***</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#冗余索引"><span class="nav-number">1.3.6.</span> <span class="nav-text">冗余索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引类型"><span class="nav-number">1.3.7.</span> <span class="nav-text">索引类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三星索引"><span class="nav-number">1.3.8.</span> <span class="nav-text">三星索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询"><span class="nav-number">1.4.</span> <span class="nav-text">查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#扫描类型"><span class="nav-number">1.4.1.</span> <span class="nav-text">扫描类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单查询-vs-复杂查询"><span class="nav-number">1.4.2.</span> <span class="nav-text">简单查询 vs. 复杂查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关联查询"><span class="nav-number">1.4.3.</span> <span class="nav-text">关联查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#延迟关联"><span class="nav-number">1.4.4.</span> <span class="nav-text">延迟关联</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可选择性-amp-WHERE的优化"><span class="nav-number">1.4.5.</span> <span class="nav-text">可选择性 &amp; WHERE的优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#范围查询"><span class="nav-number">1.4.6.</span> <span class="nav-text">范围查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IN-amp-EXIST"><span class="nav-number">1.4.7.</span> <span class="nav-text">IN() &amp; EXIST()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#子查询"><span class="nav-number">1.4.8.</span> <span class="nav-text">子查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UNION优化"><span class="nav-number">1.4.9.</span> <span class="nav-text">UNION优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LIMIT优化"><span class="nav-number">1.4.10.</span> <span class="nav-text">LIMIT优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分区"><span class="nav-number">1.5.</span> <span class="nav-text">分区</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jiang Tao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', function() {
+    var gitalk = new Gitalk({
+      clientID: '718be8debab9c5679ffe',
+      clientSecret: '0d04fe57f26db5e87925fb322d82ef56f7d41417',
+      repo: 'git-talk',
+      owner: 'VIXNESS',
+      admin: ['VIXNESS'],
+      id: '8238eb0c7f683dcb331dcab4d2b2ced1',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>
