@@ -66,7 +66,9 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://meolin.net/images/Java_Note/0.png">
 <meta property="og:image" content="http://meolin.net/images/Java_Note/1.png">
-<meta property="og:updated_time" content="2020-07-31T04:02:10.244Z">
+<meta property="og:image" content="http://meolin.net/images/Java_Note/mermaid-diagram-20200731122443.png">
+<meta property="og:image" content="http://meolin.net/images/Java_Note/mermaid-diagram-20200731122659.png">
+<meta property="og:updated_time" content="2020-07-31T04:27:45.480Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java Note">
 <meta name="twitter:description" content="Java NoteI 虚拟机内存布局1. JVM运行时 内存布局   区域 作用 线程内存共享 异常 异常原因     方法区 存放类型信息, 常量, 静态变量, JIT代码缓存. 线程共享 OOM JVM规范规定, 无法满足内存分配时可抛出.   虚拟机栈 存储局部变量, 操作数栈,  动态链接, 接口等. 线程私有 OOM, SO SO: 栈深度超出JVM允许范围;OOM: 栈扩展失败导致的内">
@@ -235,7 +237,7 @@
                 
               
 
-              <time title="创建时间：2020-07-31 11:54:00 / 修改时间：12:02:10" itemprop="dateCreated datePublished" datetime="2020-07-31T11:54:00+08:00">2020-07-31</time>
+              <time title="创建时间：2020-07-31 11:54:00 / 修改时间：12:27:45" itemprop="dateCreated datePublished" datetime="2020-07-31T11:54:00+08:00">2020-07-31</time>
             </span>
           
             
@@ -422,7 +424,7 @@
 <h3 id="3-反射系统"><a href="#3-反射系统" class="headerlink" title="3. 反射系统"></a>3. 反射系统</h3><p>反射系统主要是基于Class对象的操作.</p>
 <p>当类加载器从不同渠道加载完Java类后, 都会形成这个类加载器下一一对应的Class对象(当然, 不同的类加载器加载的同一个类不是同一个Class对象).</p>
 <h2 id="IV-多线程并发"><a href="#IV-多线程并发" class="headerlink" title="IV 多线程并发"></a>IV 多线程并发</h2><h3 id="1-内存模型"><a href="#1-内存模型" class="headerlink" title="1. 内存模型"></a>1. 内存模型</h3><p>JVM主要解决各个线程的工作内存与主存之间的数据一致性问题.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph TD;</span><br><span class="line">Thread-0-工作内存 --&gt; 一致性协议;</span><br><span class="line">Thread-1-工作内存 --&gt; 一致性协议;</span><br><span class="line">Thread-2-工作内存 --&gt; 一致性协议;</span><br><span class="line">一致性协议 --&gt; 主存;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Java_Note/mermaid-diagram-20200731122443.png" alt="内存"> </p>
 <h4 id="一致性协议具体内容"><a href="#一致性协议具体内容" class="headerlink" title="一致性协议具体内容"></a>一致性协议具体内容</h4><ul>
 <li>read - load: 两条指令必须按<strong><em>顺序</em></strong>使用, 且必须<strong><em>成对</em></strong>出现, read作用于<strong>主存</strong>, load作用于<strong>工作内存</strong>. 目的是为了把<strong>主存</strong>中的变量读入线程<strong>工作内存</strong>变为私有副本.</li>
 <li>store - write: 两条指令必须按<strong><em>顺序</em></strong>使用, 且必须<strong><em>成对</em></strong>出现, store作用于<strong>工作内存</strong>, write作用于<strong>主存</strong>. 目的是把<strong>工作内存</strong>中的放入<strong>主存</strong>.</li>
@@ -699,7 +701,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//例如, List&lt;T&gt; 是一个已经定义好的泛型类型, 是一个泛型容器.</span></span><br><span class="line"><span class="keyword">public</span> App&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">copy</span><span class="params">(List&lt;? <span class="keyword">super</span> Animal&gt; dst, List&lt;? extends Animal&gt; src)</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>通配符指代:</p>
 <p>若存在关系</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">classDiagram</span><br><span class="line">Object &lt;-- Animal</span><br><span class="line">Animal &lt;-- Wolf</span><br><span class="line">Wolf &lt;-- Dog</span><br><span class="line">Dog &lt;-- Husky</span><br><span class="line">Dog &lt;-- Alaskan</span><br><span class="line">Dog &lt;-- Samoyed</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Java_Note/mermaid-diagram-20200731122659.png" alt="类"></p>
 <p>那么</p>
 <ul>
 <li><p><code>? extends Dog</code> 指代的类型是: Husky, Alaskan, Samoyed以及Dog自己.</p>
@@ -1091,5 +1093,6 @@
   }, window.Gitalk);
 </script>
 
+  
 </body>
 </html>

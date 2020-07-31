@@ -63,10 +63,12 @@
 <meta property="og:site_name" content="喵灵">
 <meta property="og:description" content="高性能MySQL 笔记表列过多的列由于MySQL的存储层与通信层之间使用的缓冲格式是列缓冲的, 过多的列转行导致开销增大.范式 1NF: 列具有原子性,  不可拆分. 2NF: 在满足第一范式（1NF）的基础上, 每一个非码属性（不在主键中的列）都必须完全函数依赖于 候选码. 若某些非主属性不依赖于候选码, 那么会不符合2NF. 3NF: 在满足第二范式（2NF）的基础上, 每个非主属性不依赖于其">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-07-31T04:04:10.950Z">
+<meta property="og:image" content="http://meolin.net/2020/07/31/MySQL-Note/images/Mysql_Note/0.png">
+<meta property="og:updated_time" content="2020-07-31T04:26:03.518Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL Note">
 <meta name="twitter:description" content="高性能MySQL 笔记表列过多的列由于MySQL的存储层与通信层之间使用的缓冲格式是列缓冲的, 过多的列转行导致开销增大.范式 1NF: 列具有原子性,  不可拆分. 2NF: 在满足第一范式（1NF）的基础上, 每一个非码属性（不在主键中的列）都必须完全函数依赖于 候选码. 若某些非主属性不依赖于候选码, 那么会不符合2NF. 3NF: 在满足第二范式（2NF）的基础上, 每个非主属性不依赖于其">
+<meta name="twitter:image" content="http://meolin.net/2020/07/31/MySQL-Note/images/Mysql_Note/0.png">
   <link rel="canonical" href="http://meolin.net/2020/07/31/MySQL-Note/">
 
 
@@ -231,7 +233,7 @@
                 
               
 
-              <time title="创建时间：2020-07-31 12:04:08 / 修改时间：12:04:10" itemprop="dateCreated datePublished" datetime="2020-07-31T12:04:08+08:00">2020-07-31</time>
+              <time title="创建时间：2020-07-31 12:04:08 / 修改时间：12:26:03" itemprop="dateCreated datePublished" datetime="2020-07-31T12:04:08+08:00">2020-07-31</time>
             </span>
           
             
@@ -309,7 +311,7 @@
 <p>共计取了101, 应该为899元, 结果却为999元.</p>
 <p>串行化可以解决此类问题.</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line">participant transactionI</span><br><span class="line">participant transactionII</span><br><span class="line">participant row</span><br><span class="line">transactionI -&gt;&gt; row: lock S-Lock, query 1000</span><br><span class="line">transactionII -&gt;&gt; row: lock S-Lock, query 1000</span><br><span class="line">transactionI -&gt;&gt; row: unlock S-Lock</span><br><span class="line">transactionII -&gt;&gt; row: unlock S-Lock</span><br><span class="line">transactionI -&gt;&gt; transactionI: 1000 - 100 = 900</span><br><span class="line">transactionII -&gt;&gt; transactionII: 1000 - 1 = 999</span><br><span class="line">transactionI -&gt;&gt; row: lock X-Lock</span><br><span class="line">transactionII -&gt;&gt; row: lock X-Lock</span><br><span class="line">row --&gt;&gt; transactionII: block</span><br><span class="line">transactionI -&gt;&gt; row: update row = 900</span><br><span class="line">transactionI -&gt;&gt; row: unlock X-Lock</span><br><span class="line">row --&gt;&gt; transactionII: awake</span><br><span class="line">transactionII -&gt;&gt; row: update row = 999</span><br><span class="line">transactionII -&gt;&gt; row: unlock X-Lock</span><br></pre></td></tr></table></figure>
+<p><img src="images/Mysql_Note/0.png" alt="事务"></p>
 <h4 id="事务分类"><a href="#事务分类" class="headerlink" title="事务分类"></a>事务分类</h4><ul>
 <li><p>扁平事务</p>
 </li>
@@ -863,5 +865,6 @@
   }, window.Gitalk);
 </script>
 
+  
 </body>
 </html>

@@ -1,49 +1,342 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Effective Modern C++ 行为习惯列举</title>
-    <url>/2019/05/07/Effective-Modern-C-%E8%A1%8C%E4%B8%BA%E4%B9%A0%E6%83%AF%E5%88%97%E4%B8%BE/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
-<p>面向已经掌握了C++11之前的同学, 本文只列举了基本的几条.</p>
-<p>ref: Effective Modern C++</p>
-</blockquote><h2 id="用auto-代替显示声明"><a href="#用auto-代替显示声明" class="headerlink" title="用auto 代替显示声明."></a>用<strong>auto</strong> 代替显示声明.</h2><p>✘ 错误示范:</p><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typename</span> <span class="built_in">std</span>::iterator_traits&lt;It&gt;::value_type currValue = *b;</span><br></pre></td></tr></table></figure><a id="more"></a>
+    <title>MySQL Note</title>
+    <url>/2020/07/31/MySQL-Note/</url>
+    <content><![CDATA[<h1 id="高性能MySQL-笔记"><a href="#高性能MySQL-笔记" class="headerlink" title="高性能MySQL 笔记"></a>高性能MySQL 笔记</h1><h2 id="表"><a href="#表" class="headerlink" title="表"></a>表</h2><h3 id="列"><a href="#列" class="headerlink" title="列"></a>列</h3><h4 id="过多的列"><a href="#过多的列" class="headerlink" title="过多的列"></a>过多的列</h4><p>由于MySQL的存储层与通信层之间使用的缓冲格式是列缓冲的, 过多的列转行导致开销增大.</p><h3 id="范式"><a href="#范式" class="headerlink" title="范式"></a>范式</h3><ul>
+<li>1NF: 列具有原子性,  不可拆分.</li>
+<li>2NF: 在满足第一范式（1NF）的基础上, 每一个非码属性（不在主键中的列）都必须<strong>完全函数依赖于</strong> <em>候选码</em>. 若某些非主属性不依赖于候选码, 那么会不符合2NF.</li>
+<li>3NF: 在满足第二范式（2NF）的基础上, 每个非主属性不依赖于其它非主属性, 即在2NF基础上，消除非码属性对候选码的传递函数依赖.(即所有非主属性对主属性直接依赖, 不能传递地依赖.)</li>
+<li>BCNF: 非主属性不能对主属性部分依赖.</li>
+</ul><a id="more"></a>
 
-
-<p>✔ 正确示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">auto</span> currValue = *b;</span><br></pre></td></tr></table></figure>
-<h2 id="使用nullptr-替代NULL-和0"><a href="#使用nullptr-替代NULL-和0" class="headerlink" title="使用nullptr 替代NULL 和0."></a>使用<strong>nullptr</strong> 替代<strong>NULL</strong> 和<strong>0</strong>.</h2><p>✘ 错误示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="number">0</span>)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="literal">NULL</span>)&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>✔ 正确示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="literal">nullptr</span>)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="使用using-替代typedef"><a href="#使用using-替代typedef" class="headerlink" title="使用using 替代typedef."></a>使用<strong>using</strong> 替代<strong>typedef</strong>.</h2><p>✘ 错误示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;<span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, <span class="built_in">std</span>::<span class="built_in">string</span>&gt;&gt; UPtrMapSS;</span><br></pre></td></tr></table></figure>
-<p>✔ 正确示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> UPtrMapSS = <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;<span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, <span class="built_in">std</span>::<span class="built_in">string</span>&gt;&gt;;</span><br></pre></td></tr></table></figure>
-<h2 id="有范围的enum-替代无范围的enum"><a href="#有范围的enum-替代无范围的enum" class="headerlink" title="有范围的enum 替代无范围的enum."></a>有范围的<strong>enum</strong> 替代无范围的<strong>enum</strong>.</h2><p>✘ 错误示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">enum</span> Color &#123; black, white, red &#125;;</span><br><span class="line"><span class="keyword">auto</span> white = <span class="literal">false</span>; <span class="comment">//white 已经被声明了, error!</span></span><br></pre></td></tr></table></figure>
-<p>✔ 正确示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="class"><span class="keyword">class</span> <span class="title">Color</span> &#123;</span> black, white, red &#125;;</span><br><span class="line"><span class="keyword">auto</span> white = <span class="literal">false</span>; <span class="comment">// 一切正常</span></span><br><span class="line">Color c = Color::white; <span class="comment">//规范的声明方式</span></span><br><span class="line"><span class="keyword">auto</span> c = Color::white; <span class="comment">//规范的声明方式</span></span><br></pre></td></tr></table></figure>
-<h2 id="禁用函数时-用delete-替代private"><a href="#禁用函数时-用delete-替代private" class="headerlink" title="禁用函数时, 用delete 替代private."></a>禁用函数时, 用<strong>delete</strong> 替代<strong>private</strong>.</h2><p>✘ 错误示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">basic_ios</span> :</span> <span class="keyword">public</span> ios_base &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	basic_ios(<span class="keyword">const</span> basic_ios&amp; ); </span><br><span class="line">	basic_ios&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> basic_ios&amp;); </span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>✔ 正确示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">basic_ios</span> :</span> <span class="keyword">public</span> ios_base &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	basic_ios(<span class="keyword">const</span> basic_ios&amp; ) = <span class="keyword">delete</span>; </span><br><span class="line">	basic_ios&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> basic_ios&amp;) = <span class="keyword">delete</span>; </span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="使用override-关键字标注-override函数"><a href="#使用override-关键字标注-override函数" class="headerlink" title="使用override 关键字标注 override函数."></a>使用<strong>override</strong> 关键字标注 override函数.</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> &#123;</span> </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">()</span> <span class="keyword">const</span></span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf2</span><span class="params">(<span class="keyword">int</span> x)</span></span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf3</span><span class="params">()</span> &amp;</span>; </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="keyword">const</span></span>; </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span>:</span> <span class="keyword">public</span> Base &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">()</span> override</span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf2</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> x)</span> override</span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf3</span><span class="params">()</span> &amp;&amp; override</span>; <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="keyword">const</span> override</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="使用const-iterators-替代iterators"><a href="#使用const-iterators-替代iterators" class="headerlink" title="使用const_iterators 替代iterators."></a>使用const_iterators 替代iterators.</h2><p>✘ 错误示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; values;</span><br><span class="line">…</span><br><span class="line"><span class="keyword">auto</span> it = <span class="built_in">std</span>::find(values.begin(),values.end(), <span class="number">1983</span>); <span class="comment">//使用begin()和end()</span></span><br><span class="line">values.insert(it, <span class="number">1998</span>);</span><br></pre></td></tr></table></figure>
-<p>✔ 正确示范:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; values; </span><br><span class="line">…</span><br><span class="line"><span class="keyword">auto</span> it = <span class="built_in">std</span>::find(values.cbegin(),values.cend(), <span class="number">1983</span>);<span class="comment">//使用cbegin()和cend()</span></span><br><span class="line">values.insert(it, <span class="number">1998</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="如果函数不会抛出异常-使用noexcept进行声明"><a href="#如果函数不会抛出异常-使用noexcept进行声明" class="headerlink" title="如果函数不会抛出异常, 使用noexcept进行声明."></a>如果函数不会抛出异常, 使用<strong>noexcept</strong>进行声明.</h2><p>✘ C++98:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> x)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
-<p>✔ C++11:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> x)</span> <span class="keyword">noexcept</span></span>;</span><br></pre></td></tr></table></figure>
-<h2 id="使用智能指针-std-unique-ptr-std-shared-ptr-std-weak-ptr替代传统指针-std-auto-淘汰了别用了"><a href="#使用智能指针-std-unique-ptr-std-shared-ptr-std-weak-ptr替代传统指针-std-auto-淘汰了别用了" class="headerlink" title="使用智能指针 std::unique_ptr, std::shared_ptr,  std::weak_ptr替代传统指针 (std::auto 淘汰了别用了)."></a>使用智能指针 <code>std::unique_ptr</code>, <code>std::shared_ptr</code>,  <code>std::weak_ptr</code>替代传统指针 (<code>std::auto</code> 淘汰了别用了).</h2><h2 id="能用constexpr就用constexpr"><a href="#能用constexpr就用constexpr" class="headerlink" title="能用constexpr就用constexpr."></a>能用constexpr就用constexpr.</h2><h2 id="让常成员函数线程安全-使用std-mutex-或std-atomic-等"><a href="#让常成员函数线程安全-使用std-mutex-或std-atomic-等" class="headerlink" title="让常成员函数线程安全: 使用std::mutex 或std::atomic 等."></a>让<em>常成员函数</em>线程安全: 使用<code>std::mutex</code> 或<code>std::atomic</code> 等.</h2><h2 id="善用右值-Rvalue-语义转移-Move-Semantics-完美转发-Perfect-Forwarding"><a href="#善用右值-Rvalue-语义转移-Move-Semantics-完美转发-Perfect-Forwarding" class="headerlink" title="善用右值[Rvalue], 语义转移[Move Semantics], 完美转发[Perfect Forwarding]"></a>善用右值[<em>Rvalue</em>], 语义转移[<em>Move Semantics</em>], 完美转发[<em>Perfect Forwarding</em>]</h2><h2 id="善用Lambda-表达式"><a href="#善用Lambda-表达式" class="headerlink" title="善用Lambda 表达式"></a>善用Lambda 表达式</h2><h2 id="善用并发编程API"><a href="#善用并发编程API" class="headerlink" title="善用并发编程API"></a>善用并发编程API</h2><h2 id="容器中使用emplace-back-替代push-back"><a href="#容器中使用emplace-back-替代push-back" class="headerlink" title="容器中使用emplace_back(),  替代push_back()"></a>容器中使用<code>emplace_back()</code>,  替代<code>push_back()</code></h2>]]></content>
-      <categories>
-        <category>c++</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-      </tags>
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><h4 id="VARCHAR-vs-CHAR"><a href="#VARCHAR-vs-CHAR" class="headerlink" title="VARCHAR vs. CHAR"></a>VARCHAR vs. CHAR</h4><ul>
+<li>varchar 保留尾部空格, char不保留.</li>
+<li>varchar 适用于字符串长度方差大的.</li>
+<li>varchar 省空间但是update成本高.</li>
+</ul>
+<h4 id="BLOB-amp-TEXT"><a href="#BLOB-amp-TEXT" class="headerlink" title="BLOB &amp; TEXT"></a>BLOB &amp; TEXT</h4><ul>
+<li>都是存储指针, 需要二次访问.</li>
+<li>可以做索引, 但是必须给出前缀长度.</li>
+</ul>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><h3 id="A-C-I-D"><a href="#A-C-I-D" class="headerlink" title="A.C.I.D."></a>A.C.I.D.</h3><ul>
+<li>Atomicity（原子性）：一个事务（transaction）中的所有操作，或者全部完成，或者全部不完成，不会结束在中间某个环节。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。即，事务不可分割、不可约简。</li>
+<li>Consistency（一致性）：在事务开始之前和事务结束以后，数据库的完整性没有被破坏。这表示写入的资料必须完全符合所有的预设约束、触发器、级联回滚等。</li>
+<li>Isolation（隔离性）：数据库允许多个并发事务同时对其数据进行读写和修改的能力，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据的不一致。事务隔离分为不同级别，包括未提交读（Read uncommitted）、提交读（read committed）、可重复读（repeatable read）和串行化（Serializable）。</li>
+<li>Durability（持久性）：事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>出现的问题</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>脏读</td>
+<td>读取了其他事务未提交的数据, 导致数据错误.</td>
+<td>改为提交读. —— 只能读取事务提交后的数据.</td>
+</tr>
+<tr>
+<td>不可重复读</td>
+<td>一个对同一数据的两次查询之间, 另一个事务做出了修改, 导致前后不一致.</td>
+<td>改为可重复读. —— 使用 X, S锁.</td>
+</tr>
+<tr>
+<td>幻读</td>
+<td>查询结果为多个记录的时候, 前后两次这样的查询之间, 插入了新的记录, 导致前后结果不一致</td>
+<td>串行化 或 Next-Key Lock</td>
+</tr>
+<tr>
+<td>更新丢失</td>
+<td>两个事务同时对同一个数据进行更新操作, 其中在read-and-write阻塞, 尽管加S, X锁仍然导致错误.</td>
+<td>串行化.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>更新丢失出现, 有可能并非事务隔离能避免的.</p>
+<p>例如现在两个程序端, 同时对同一个人取款. 初始1000, 事务一取 100块, 事务二取 1 块.</p>
+<p>共计取了101, 应该为899元, 结果却为999元.</p>
+<p>串行化可以解决此类问题.</p>
+</blockquote>
+<p><img src="images/Mysql_Note/0.png" alt="事务"></p>
+<h4 id="事务分类"><a href="#事务分类" class="headerlink" title="事务分类"></a>事务分类</h4><ul>
+<li><p>扁平事务</p>
+</li>
+<li><p>带保存点的扁平事务</p>
+</li>
+<li><p>链事务</p>
+</li>
+<li><p>嵌套事务</p>
+</li>
+</ul>
+<h4 id="事务陷阱"><a href="#事务陷阱" class="headerlink" title="事务陷阱"></a>事务陷阱</h4><ul>
+<li>自动回滚 —— 自动回滚不会抛出异常, 无法知道异常. (SQL Server 会抛出异常, 这个是MySQL特有的缺点)</li>
+<li>自动提交.</li>
+<li>在循环中提交 —— 意外导致在未知位置终止, 无法还原.</li>
+</ul>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><h4 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h4><h5 id="共享锁-独占锁"><a href="#共享锁-独占锁" class="headerlink" title="共享锁, 独占锁"></a>共享锁, 独占锁</h5><ul>
+<li>允许多个事务读同一行.</li>
+<li>当事务对同一行进行写操作, 将阻塞其他所有事务的读、写操作.</li>
+</ul>
+<h4 id="行锁算法"><a href="#行锁算法" class="headerlink" title="行锁算法"></a>行锁算法</h4><h5 id="Record-Lock"><a href="#Record-Lock" class="headerlink" title="Record Lock"></a>Record Lock</h5><p>单一行锁.</p>
+<h5 id="Gap-Lock"><a href="#Gap-Lock" class="headerlink" title="Gap Lock"></a>Gap Lock</h5><p>锁定一个区间, 但是不包括该记录本身.</p>
+<h5 id="Next-Key-Lock"><a href="#Next-Key-Lock" class="headerlink" title="Next-Key Lock"></a>Next-Key Lock</h5><p>锁定该记录本身, 并且锁定包含它的一个范围.</p>
+<h4 id="粒度锁"><a href="#粒度锁" class="headerlink" title="粒度锁"></a>粒度锁</h4><h5 id="意向锁-树状锁"><a href="#意向锁-树状锁" class="headerlink" title="意向锁 :  树状锁"></a>意向锁 :  树状锁</h5><p>锁的结构呈树状, 粗粒度锁拥有几个粒度细的锁.</p>
+<p>叶子的粒度细, 父节点的粒度粗.</p>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h3 id="索引的相关理论"><a href="#索引的相关理论" class="headerlink" title="索引的相关理论"></a>索引的相关理论</h3><h4 id="最左前缀匹配"><a href="#最左前缀匹配" class="headerlink" title="最左前缀匹配"></a>最左前缀匹配</h4><p>MySQL引擎采用最左前缀匹配的机制, 可以高效从左匹配.</p>
+<p>所以最左端是模糊查询的时候, 最左前缀匹配失效, 导致性能降低.</p>
+<h4 id="可选择性"><a href="#可选择性" class="headerlink" title="可选择性"></a>可选择性</h4><p>可选择性的意思是, 针对某一字段查询出的结果, 对于这个的分区度.(这一字段的重复程度)</p>
+<blockquote>
+<p>例如, 性别的区分度就很低: 根据某个性别查询出的结果, 性别的区分度及其低. </p>
+<p>再如, 年龄、城市的区分度稍稍高于性别的区分度.</p>
+<p>最高的区分度莫过于ID之类的字段. 其是唯一的, 所以它的可选择性及高.</p>
+</blockquote>
+<p>解决可选择性低的方法是, 将几个可选择性低的字段使用多列索引组合起来, 让其可区分度上升.</p>
+<h4 id="聚集索引-vs-辅助索引"><a href="#聚集索引-vs-辅助索引" class="headerlink" title="聚集索引 vs. 辅助索引"></a>聚集索引 vs. 辅助索引</h4><ul>
+<li>聚集索引: 也称主码索引, 使用主码建立的索引, 直接指向数据.</li>
+<li>辅助索引: 非主码索引, 该索引指向主码. 先用该索引定位主码, 再用主码定位数据.</li>
+</ul>
+<h3 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a>聚簇索引</h3><p>将某一列相同相近的记录排在一起, 进行索引.</p>
+<blockquote>
+<p>其提高了I/O密集型的性能, 相关数据保存在一起.</p>
+</blockquote>
+<h4 id="聚簇-vs-可选择性-——-UUID-vs-自增ID的选择及UUID的优化"><a href="#聚簇-vs-可选择性-——-UUID-vs-自增ID的选择及UUID的优化" class="headerlink" title="聚簇 vs 可选择性 —— UUID vs. 自增ID的选择及UUID的优化"></a>聚簇 vs 可选择性 —— UUID vs. 自增ID的选择及UUID的优化</h4><ul>
+<li>UUID应该使用UNHEX存储在Binary(16)中, 而不是用字符串存储.</li>
+<li>UUID的引入, 导致了索引的随机性大大增加, 索引占用空间变大.</li>
+<li>因为UUID是随机的,  每一页都是随机填充的, 导致页内碎片变多. 而且因为写入是乱序的, 导致频繁的页分裂.</li>
+<li>UUID是随机的, 导致大量的随机I/O, 性能大幅下降.</li>
+<li>自增ID会有自增锁, 频繁的锁也会导致阻塞. </li>
+<li>自增PK会成为热点数据, 并发插入导致<strong>间隙竞争</strong>可以考虑修改<code>innodb_autoinc_lock_mode</code> 进行优化.</li>
+</ul>
+<blockquote>
+<p> 折中方案:</p>
+<p>使用前缀顺序+后缀随机的组合式ID可以达到这两种极端的综合.</p>
+</blockquote>
+<h3 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h3><p>为了解决可选择性过低的问题, 多个选择性低的字段, 可用多列索引组合起来, 提高可选择性, 这就是多列索引.</p>
+<p>但是选择性高的字段组合起来, 会增加负担.</p>
+<blockquote>
+<p>例如有一些待查询的列: &lt;性别,  年龄, 城市&gt;</p>
+<ul>
+<li>性别的可选择性最低, 因为查询出的人性别无非就几种, 这列的查询结果重复度极高.</li>
+<li>其次, 年龄一般在0~99之间集中分布,  重复读虽然低于性别, 但是几十万的数据集中分布在0~99这个区间, 重复度也不低.</li>
+<li>同理, 城市的区分度高于前两者, 但是可选择性也是一般.</li>
+</ul>
+<p>此时, 可以建立一个多列索引, 将这三个可选择性低的列绑成一个多列索引, 可以大大提高可选择性.</p>
+</blockquote>
+<h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引***"></a>覆盖索引***</h3><blockquote>
+<p>如果一个索引覆盖了查询字段的所有值, 那么称其为覆盖索引.</p>
+</blockquote>
+<p>优点:</p>
+<ul>
+<li>索引条目少.</li>
+<li>索引按照列值存储, 使用顺序的磁盘I/O; 少次的顺序I/O比多次的随机I/O性能好.</li>
+</ul>
+<p><strong>索引失效情况</strong></p>
+<ul>
+<li>索引没有覆盖到查询列. —— <strong>使用延迟查询解决.</strong></li>
+<li>MySQL5.5 之后可以使用最左前缀匹配的Like查询, 但是非最左前缀匹配的模糊查询将使得索引失效.</li>
+<li>ORDER BY, GROUP BY所用的列未索引覆盖, 导致无法索引排序.</li>
+</ul>
+<h3 id="索引排序"><a href="#索引排序" class="headerlink" title="索引排序***"></a>索引排序***</h3><blockquote>
+<p>利用索引对数据进行排序.</p>
+</blockquote>
+<p>针对 ORDER BY和GROUP BY</p>
+<ul>
+<li>只有当查询的列顺序和排序的列顺序相同, 且排序方向相同(都是升序或都是降序), MySQL才会对其进行索引排序.</li>
+<li>关联多表的ORDER BY、GROUP BY引用的字段必须全部为首张表, 才会触发索引排序.</li>
+<li>必须满足最左前缀匹配.</li>
+<li>范围查询中的列与ORDER BY、GROUP BY中的列要一致, 才能出发索引排序.</li>
+</ul>
+<h3 id="冗余索引"><a href="#冗余索引" class="headerlink" title="冗余索引"></a>冗余索引</h3><blockquote>
+<p>若有索引$(A,B)$ 之后又出现了 索引$(A)$ , 则 $(A)$ 是$(A,B)$的索引.</p>
+<p>但$(A)$不是$(B,A)$ 的索引.</p>
+</blockquote>
+<p>因为索引多, 虽然查询快, 但是插入慢(需要维护索引的成本变高). 冗余、重复的索引会降低性能.</p>
+<h3 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h3><blockquote>
+<p>EXPLAIN中的extra字段可显示. 指检索数据的方式.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Extra</th>
+<th>意思</th>
+<th>可能出现的情况</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>using index</td>
+<td>使用索引</td>
+<td>覆盖索引, 高效.</td>
+</tr>
+<tr>
+<td>using where</td>
+<td>存储引擎收到记录后进行过滤</td>
+<td>索引未覆盖, 或部分覆盖.</td>
+</tr>
+<tr>
+<td>using condition</td>
+<td>使用条件</td>
+<td>查询会先条件过滤索引，过滤完索引后找到所有符合索引条件的数据行，<br>随后用 WHERE 子句中的其他条件去过滤这些数据行.</td>
+</tr>
+<tr>
+<td>using filesort</td>
+<td>使用文件排序</td>
+<td>无法利用索引完成的排序操作称为“文件排序”.</td>
+</tr>
+<tr>
+<td>using temporary</td>
+<td>使用临时表</td>
+<td>需要使用临时表来存储结果集，常见于排序和分组查询.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="三星索引"><a href="#三星索引" class="headerlink" title="三星索引"></a>三星索引</h3><table>
+<thead>
+<tr>
+<th>星级</th>
+<th>定义</th>
+<th>原理</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🌟</td>
+<td>这个索引与一个查询相关的索引行是相邻的, 或者是相近的</td>
+<td>它最小化了必须扫描的索引片的宽度</td>
+<td>把 WHERE 后的等值条件列作为索引最开头的列</td>
+</tr>
+<tr>
+<td>🌟🌟</td>
+<td>索引行的顺序与查询语句的需求一致</td>
+<td>排除了排序操作</td>
+<td>ORDER BY的列都在索引中, 且与查询顺序一致</td>
+</tr>
+<tr>
+<td>🌟🌟🌟</td>
+<td>如果索引行中包含查询语句中的所有列</td>
+<td>覆盖索引</td>
+<td>实现覆盖索引</td>
+</tr>
+</tbody>
+</table>
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><blockquote>
+<p>查询变慢的原因包括但不限于:</p>
+<ul>
+<li>返回了过多的数据.</li>
+<li>返回了不需要的列.</li>
+</ul>
+</blockquote>
+<h3 id="扫描类型"><a href="#扫描类型" class="headerlink" title="扫描类型"></a>扫描类型</h3><blockquote>
+<p>使用EXPLAIN语句可以查看该查询的扫描类型, 在type字段. 指检索数据的集合.</p>
+<p>性能高低:</p>
+<p>常数引用  &gt; 唯一索引查询 &gt; 范围扫描 &gt; 索引扫描 &gt; 全表扫描</p>
+</blockquote>
+<p>扫描类型</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">名称</th>
+<th>成因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center">全表扫描</td>
+<td>查询扫描了全部整个表, 性能最低</td>
+</tr>
+<tr>
+<td style="text-align:center">index</td>
+<td style="text-align:center">索引全扫描</td>
+<td>查询扫描了整个索引</td>
+</tr>
+<tr>
+<td style="text-align:center">range</td>
+<td style="text-align:center">索引范围扫描</td>
+<td>是范围查询</td>
+</tr>
+<tr>
+<td style="text-align:center">ref</td>
+<td style="text-align:center">非唯一索引扫描</td>
+<td>非唯一索引或者使用了最左前缀匹配</td>
+</tr>
+<tr>
+<td style="text-align:center">eq_ref</td>
+<td style="text-align:center">唯一索引扫描</td>
+<td>一般出现在多表连接时使用primary key或者unique index作为关联条件</td>
+</tr>
+<tr>
+<td style="text-align:center">const,system</td>
+<td style="text-align:center">单表最多有一个匹配行</td>
+<td>出现在根据主键primary key, 或者唯一索引 unique index 进行的查询</td>
+</tr>
+<tr>
+<td style="text-align:center">NULL</td>
+<td style="text-align:center">不用扫描表或索引</td>
+<td>不用访问表或者索引，直接就能够得到结果</td>
+</tr>
+</tbody>
+</table>
+<h3 id="简单查询-vs-复杂查询"><a href="#简单查询-vs-复杂查询" class="headerlink" title="简单查询 vs. 复杂查询"></a>简单查询 vs. 复杂查询</h3><p>如果条件允许, 应该使用多个简单查询替代一个复杂查询. </p>
+<p>这样的查询结果很高效, 而且还能将查询结果缓存.</p>
+<h3 id="关联查询"><a href="#关联查询" class="headerlink" title="关联查询"></a>关联查询</h3><p>MySQL的关联查询是一个左长臂二叉树, 而不是AVL树. 大量的联合查询导致左子树呈现出线性的特征, 导致效率低下.</p>
+<p>需要避免过多的多表查询, 或者手动优化JOIN的方式, 使查询树的高度变低.</p>
+<p>​                   JOIN</p>
+<p>​                /          \</p>
+<p>​            JOIN     table4</p>
+<p>​          /        \</p>
+<p>​     JOIN     table3</p>
+<p>   /        \</p>
+<p>table1  table2</p>
+<h3 id="延迟关联"><a href="#延迟关联" class="headerlink" title="延迟关联"></a>延迟关联</h3><p>若在查询中有索引无法覆盖的列, 应该拆分出来成为一个子查询, 使用例如left outer/inner join进行连接后查询.</p>
+<blockquote>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SELECT id, description from tableA order by title limit 50,5; -- title没有索引覆盖</span><br><span class="line">&gt; -- 化为</span><br><span class="line">&gt; SELECT id, decription from tableA inner join (SELECT id from tableA order by title) as tmp USING(id); -- 缩小非索引覆盖的范围. 子查询只查pk.</span><br><span class="line">&gt; </span><br><span class="line">&gt; SELECT id, cu_id, name, info, biz_type, gmt_create, gmt_modified,start_time, end_time, market_type, back_leaf_category,item_status,picuture_url FROM relation where biz_type =&apos;0&apos; AND end_time &gt;=&apos;2014-05-29&apos; ORDER BY id asc LIMIT 149420 ,20;</span><br><span class="line">&gt; </span><br><span class="line">&gt; SELECT a.* FROM relation a, (select id from relation where biz_type =&apos;0&apos; AND end_time &gt;=&apos;2014-05-29&apos; ORDER BY id asc LIMIT 149420 ,20 ) b where using(id)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+</blockquote>
+<h3 id="可选择性-amp-WHERE的优化"><a href="#可选择性-amp-WHERE的优化" class="headerlink" title="可选择性 &amp; WHERE的优化"></a>可选择性 &amp; WHERE的优化</h3><ul>
+<li><p>可选择性高的列放在前查询, 查询结果基数降低, 可以提高性能.</p>
+</li>
+<li><p>所以, WHERE <strong>精确值查询</strong>{可选择性高, …, 可选择性低}  + <strong>范围查询</strong>{可选择性高(例如IN语句), &gt;&lt; !=,…, 可选择性低(区分度低的列)}</p>
+</li>
+<li><p>索引未覆盖的列应该进行拆分, 进行延迟关联.</p>
+</li>
+</ul>
+<h3 id="范围查询"><a href="#范围查询" class="headerlink" title="范围查询"></a>范围查询</h3><p>避免多个范围查询: MySQL无法同时使用两个范围查询的索引.</p>
+<p>使用IN()替代范围查询, 会提高效率.</p>
+<h3 id="IN-amp-EXIST"><a href="#IN-amp-EXIST" class="headerlink" title="IN() &amp; EXIST()"></a>IN() &amp; EXIST()</h3><ul>
+<li>EXITS的可以使得查询提前结束, 从而提高效率.</li>
+<li>使用IN效率高于比较符号. 但是IN的代价很高, IN()中的值最好不要过多. 因为IN()会对其内部的值进行一个全排列. 例如IN()中写了4个值, 那么其就要对这4个值做一个全排列$4! = 24$ , 可以看出, 这个代价是连乘积复杂度, IN()也并非银弹.</li>
+<li>OUTER JOIN的效率 &gt; EXITS的效率 &gt; INNER JOIN的效率.</li>
+</ul>
+<h3 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h3><ul>
+<li>由于MySQL引擎的原因, 子查询效果很差, 使用left outer join的方式替代, 可以提升性能.</li>
+<li>IN()中的子查询效率比EXIST()的子查询低很多, 最好别用IN子查询, 应该优先使用EXIST子查询. (MySQL查询引擎缺陷导致的问题)</li>
+</ul>
+<h3 id="UNION优化"><a href="#UNION优化" class="headerlink" title="UNION优化"></a>UNION优化</h3><ul>
+<li>order by / limit语句写在每个union的子查询中, 而不是最后再order by / limit.</li>
+</ul>
+<h3 id="LIMIT优化"><a href="#LIMIT优化" class="headerlink" title="LIMIT优化"></a>LIMIT优化</h3><ul>
+<li>延迟关联</li>
+<li><del>使用between and 语句代替比较符号.</del></li>
+</ul>
+<h2 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h2><blockquote>
+<p>分区也并非银弹.</p>
+</blockquote>
+<ul>
+<li>所有对分区的操作, 第一步都会锁住分区的底层表, 然后判定操作范围, 解锁操作范围之外的分区, 再做相应的操作,.</li>
+<li>B-Tree索引将失效.</li>
+<li>索引维护极高.</li>
+</ul>
+]]></content>
   </entry>
   <entry>
     <title>PM2.5 预测</title>
@@ -488,6 +781,51 @@
       </tags>
   </entry>
   <entry>
+    <title>Effective Modern C++ 行为习惯列举</title>
+    <url>/2019/05/07/Effective-Modern-C-%E8%A1%8C%E4%B8%BA%E4%B9%A0%E6%83%AF%E5%88%97%E4%B8%BE/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>面向已经掌握了C++11之前的同学, 本文只列举了基本的几条.</p>
+<p>ref: Effective Modern C++</p>
+</blockquote><h2 id="用auto-代替显示声明"><a href="#用auto-代替显示声明" class="headerlink" title="用auto 代替显示声明."></a>用<strong>auto</strong> 代替显示声明.</h2><p>✘ 错误示范:</p><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typename</span> <span class="built_in">std</span>::iterator_traits&lt;It&gt;::value_type currValue = *b;</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">auto</span> currValue = *b;</span><br></pre></td></tr></table></figure>
+<h2 id="使用nullptr-替代NULL-和0"><a href="#使用nullptr-替代NULL-和0" class="headerlink" title="使用nullptr 替代NULL 和0."></a>使用<strong>nullptr</strong> 替代<strong>NULL</strong> 和<strong>0</strong>.</h2><p>✘ 错误示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="number">0</span>)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="literal">NULL</span>)&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == <span class="literal">nullptr</span>)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用using-替代typedef"><a href="#使用using-替代typedef" class="headerlink" title="使用using 替代typedef."></a>使用<strong>using</strong> 替代<strong>typedef</strong>.</h2><p>✘ 错误示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;<span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, <span class="built_in">std</span>::<span class="built_in">string</span>&gt;&gt; UPtrMapSS;</span><br></pre></td></tr></table></figure>
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> UPtrMapSS = <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;<span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, <span class="built_in">std</span>::<span class="built_in">string</span>&gt;&gt;;</span><br></pre></td></tr></table></figure>
+<h2 id="有范围的enum-替代无范围的enum"><a href="#有范围的enum-替代无范围的enum" class="headerlink" title="有范围的enum 替代无范围的enum."></a>有范围的<strong>enum</strong> 替代无范围的<strong>enum</strong>.</h2><p>✘ 错误示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">enum</span> Color &#123; black, white, red &#125;;</span><br><span class="line"><span class="keyword">auto</span> white = <span class="literal">false</span>; <span class="comment">//white 已经被声明了, error!</span></span><br></pre></td></tr></table></figure>
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="class"><span class="keyword">class</span> <span class="title">Color</span> &#123;</span> black, white, red &#125;;</span><br><span class="line"><span class="keyword">auto</span> white = <span class="literal">false</span>; <span class="comment">// 一切正常</span></span><br><span class="line">Color c = Color::white; <span class="comment">//规范的声明方式</span></span><br><span class="line"><span class="keyword">auto</span> c = Color::white; <span class="comment">//规范的声明方式</span></span><br></pre></td></tr></table></figure>
+<h2 id="禁用函数时-用delete-替代private"><a href="#禁用函数时-用delete-替代private" class="headerlink" title="禁用函数时, 用delete 替代private."></a>禁用函数时, 用<strong>delete</strong> 替代<strong>private</strong>.</h2><p>✘ 错误示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">basic_ios</span> :</span> <span class="keyword">public</span> ios_base &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	basic_ios(<span class="keyword">const</span> basic_ios&amp; ); </span><br><span class="line">	basic_ios&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> basic_ios&amp;); </span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">basic_ios</span> :</span> <span class="keyword">public</span> ios_base &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	basic_ios(<span class="keyword">const</span> basic_ios&amp; ) = <span class="keyword">delete</span>; </span><br><span class="line">	basic_ios&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> basic_ios&amp;) = <span class="keyword">delete</span>; </span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="使用override-关键字标注-override函数"><a href="#使用override-关键字标注-override函数" class="headerlink" title="使用override 关键字标注 override函数."></a>使用<strong>override</strong> 关键字标注 override函数.</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> &#123;</span> </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">()</span> <span class="keyword">const</span></span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf2</span><span class="params">(<span class="keyword">int</span> x)</span></span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf3</span><span class="params">()</span> &amp;</span>; </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="keyword">const</span></span>; </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span>:</span> <span class="keyword">public</span> Base &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">()</span> override</span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf2</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> x)</span> override</span>; </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf3</span><span class="params">()</span> &amp;&amp; override</span>; <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf4</span><span class="params">()</span> <span class="keyword">const</span> override</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="使用const-iterators-替代iterators"><a href="#使用const-iterators-替代iterators" class="headerlink" title="使用const_iterators 替代iterators."></a>使用const_iterators 替代iterators.</h2><p>✘ 错误示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; values;</span><br><span class="line">…</span><br><span class="line"><span class="keyword">auto</span> it = <span class="built_in">std</span>::find(values.begin(),values.end(), <span class="number">1983</span>); <span class="comment">//使用begin()和end()</span></span><br><span class="line">values.insert(it, <span class="number">1998</span>);</span><br></pre></td></tr></table></figure>
+<p>✔ 正确示范:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; values; </span><br><span class="line">…</span><br><span class="line"><span class="keyword">auto</span> it = <span class="built_in">std</span>::find(values.cbegin(),values.cend(), <span class="number">1983</span>);<span class="comment">//使用cbegin()和cend()</span></span><br><span class="line">values.insert(it, <span class="number">1998</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="如果函数不会抛出异常-使用noexcept进行声明"><a href="#如果函数不会抛出异常-使用noexcept进行声明" class="headerlink" title="如果函数不会抛出异常, 使用noexcept进行声明."></a>如果函数不会抛出异常, 使用<strong>noexcept</strong>进行声明.</h2><p>✘ C++98:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> x)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>✔ C++11:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> x)</span> <span class="keyword">noexcept</span></span>;</span><br></pre></td></tr></table></figure>
+<h2 id="使用智能指针-std-unique-ptr-std-shared-ptr-std-weak-ptr替代传统指针-std-auto-淘汰了别用了"><a href="#使用智能指针-std-unique-ptr-std-shared-ptr-std-weak-ptr替代传统指针-std-auto-淘汰了别用了" class="headerlink" title="使用智能指针 std::unique_ptr, std::shared_ptr,  std::weak_ptr替代传统指针 (std::auto 淘汰了别用了)."></a>使用智能指针 <code>std::unique_ptr</code>, <code>std::shared_ptr</code>,  <code>std::weak_ptr</code>替代传统指针 (<code>std::auto</code> 淘汰了别用了).</h2><h2 id="能用constexpr就用constexpr"><a href="#能用constexpr就用constexpr" class="headerlink" title="能用constexpr就用constexpr."></a>能用constexpr就用constexpr.</h2><h2 id="让常成员函数线程安全-使用std-mutex-或std-atomic-等"><a href="#让常成员函数线程安全-使用std-mutex-或std-atomic-等" class="headerlink" title="让常成员函数线程安全: 使用std::mutex 或std::atomic 等."></a>让<em>常成员函数</em>线程安全: 使用<code>std::mutex</code> 或<code>std::atomic</code> 等.</h2><h2 id="善用右值-Rvalue-语义转移-Move-Semantics-完美转发-Perfect-Forwarding"><a href="#善用右值-Rvalue-语义转移-Move-Semantics-完美转发-Perfect-Forwarding" class="headerlink" title="善用右值[Rvalue], 语义转移[Move Semantics], 完美转发[Perfect Forwarding]"></a>善用右值[<em>Rvalue</em>], 语义转移[<em>Move Semantics</em>], 完美转发[<em>Perfect Forwarding</em>]</h2><h2 id="善用Lambda-表达式"><a href="#善用Lambda-表达式" class="headerlink" title="善用Lambda 表达式"></a>善用Lambda 表达式</h2><h2 id="善用并发编程API"><a href="#善用并发编程API" class="headerlink" title="善用并发编程API"></a>善用并发编程API</h2><h2 id="容器中使用emplace-back-替代push-back"><a href="#容器中使用emplace-back-替代push-back" class="headerlink" title="容器中使用emplace_back(),  替代push_back()"></a>容器中使用<code>emplace_back()</code>,  替代<code>push_back()</code></h2>]]></content>
+      <categories>
+        <category>c++</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java Note</title>
     <url>/2020/07/31/Java-Note/</url>
     <content><![CDATA[<h1 id="Java-Note"><a href="#Java-Note" class="headerlink" title="Java Note"></a>Java Note</h1><h2 id="I-虚拟机内存布局"><a href="#I-虚拟机内存布局" class="headerlink" title="I 虚拟机内存布局"></a>I 虚拟机内存布局</h2><h3 id="1-JVM运行时-内存布局"><a href="#1-JVM运行时-内存布局" class="headerlink" title="1. JVM运行时 内存布局"></a>1. JVM运行时 内存布局</h3><table>
@@ -658,7 +996,7 @@
 <h3 id="3-反射系统"><a href="#3-反射系统" class="headerlink" title="3. 反射系统"></a>3. 反射系统</h3><p>反射系统主要是基于Class对象的操作.</p>
 <p>当类加载器从不同渠道加载完Java类后, 都会形成这个类加载器下一一对应的Class对象(当然, 不同的类加载器加载的同一个类不是同一个Class对象).</p>
 <h2 id="IV-多线程并发"><a href="#IV-多线程并发" class="headerlink" title="IV 多线程并发"></a>IV 多线程并发</h2><h3 id="1-内存模型"><a href="#1-内存模型" class="headerlink" title="1. 内存模型"></a>1. 内存模型</h3><p>JVM主要解决各个线程的工作内存与主存之间的数据一致性问题.</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">graph TD;</span><br><span class="line">Thread-0-工作内存 --&gt; 一致性协议;</span><br><span class="line">Thread-1-工作内存 --&gt; 一致性协议;</span><br><span class="line">Thread-2-工作内存 --&gt; 一致性协议;</span><br><span class="line">一致性协议 --&gt; 主存;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Java_Note/mermaid-diagram-20200731122443.png" alt="内存"> </p>
 <h4 id="一致性协议具体内容"><a href="#一致性协议具体内容" class="headerlink" title="一致性协议具体内容"></a>一致性协议具体内容</h4><ul>
 <li>read - load: 两条指令必须按<strong><em>顺序</em></strong>使用, 且必须<strong><em>成对</em></strong>出现, read作用于<strong>主存</strong>, load作用于<strong>工作内存</strong>. 目的是为了把<strong>主存</strong>中的变量读入线程<strong>工作内存</strong>变为私有副本.</li>
 <li>store - write: 两条指令必须按<strong><em>顺序</em></strong>使用, 且必须<strong><em>成对</em></strong>出现, store作用于<strong>工作内存</strong>, write作用于<strong>主存</strong>. 目的是把<strong>工作内存</strong>中的放入<strong>主存</strong>.</li>
@@ -935,7 +1273,7 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//例如, List&lt;T&gt; 是一个已经定义好的泛型类型, 是一个泛型容器.</span></span><br><span class="line"><span class="keyword">public</span> App&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">copy</span><span class="params">(List&lt;? <span class="keyword">super</span> Animal&gt; dst, List&lt;? extends Animal&gt; src)</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>通配符指代:</p>
 <p>若存在关系</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">classDiagram</span><br><span class="line">Object &lt;-- Animal</span><br><span class="line">Animal &lt;-- Wolf</span><br><span class="line">Wolf &lt;-- Dog</span><br><span class="line">Dog &lt;-- Husky</span><br><span class="line">Dog &lt;-- Alaskan</span><br><span class="line">Dog &lt;-- Samoyed</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Java_Note/mermaid-diagram-20200731122659.png" alt="类"></p>
 <p>那么</p>
 <ul>
 <li><p><code>? extends Dog</code> 指代的类型是: Husky, Alaskan, Samoyed以及Dog自己.</p>
@@ -1038,343 +1376,5 @@
       <tags>
         <tag>java</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>MySQL Note</title>
-    <url>/2020/07/31/MySQL-Note/</url>
-    <content><![CDATA[<h1 id="高性能MySQL-笔记"><a href="#高性能MySQL-笔记" class="headerlink" title="高性能MySQL 笔记"></a>高性能MySQL 笔记</h1><h2 id="表"><a href="#表" class="headerlink" title="表"></a>表</h2><h3 id="列"><a href="#列" class="headerlink" title="列"></a>列</h3><h4 id="过多的列"><a href="#过多的列" class="headerlink" title="过多的列"></a>过多的列</h4><p>由于MySQL的存储层与通信层之间使用的缓冲格式是列缓冲的, 过多的列转行导致开销增大.</p><h3 id="范式"><a href="#范式" class="headerlink" title="范式"></a>范式</h3><ul>
-<li>1NF: 列具有原子性,  不可拆分.</li>
-<li>2NF: 在满足第一范式（1NF）的基础上, 每一个非码属性（不在主键中的列）都必须<strong>完全函数依赖于</strong> <em>候选码</em>. 若某些非主属性不依赖于候选码, 那么会不符合2NF.</li>
-<li>3NF: 在满足第二范式（2NF）的基础上, 每个非主属性不依赖于其它非主属性, 即在2NF基础上，消除非码属性对候选码的传递函数依赖.(即所有非主属性对主属性直接依赖, 不能传递地依赖.)</li>
-<li>BCNF: 非主属性不能对主属性部分依赖.</li>
-</ul><a id="more"></a>
-
-<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><h4 id="VARCHAR-vs-CHAR"><a href="#VARCHAR-vs-CHAR" class="headerlink" title="VARCHAR vs. CHAR"></a>VARCHAR vs. CHAR</h4><ul>
-<li>varchar 保留尾部空格, char不保留.</li>
-<li>varchar 适用于字符串长度方差大的.</li>
-<li>varchar 省空间但是update成本高.</li>
-</ul>
-<h4 id="BLOB-amp-TEXT"><a href="#BLOB-amp-TEXT" class="headerlink" title="BLOB &amp; TEXT"></a>BLOB &amp; TEXT</h4><ul>
-<li>都是存储指针, 需要二次访问.</li>
-<li>可以做索引, 但是必须给出前缀长度.</li>
-</ul>
-<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><h3 id="A-C-I-D"><a href="#A-C-I-D" class="headerlink" title="A.C.I.D."></a>A.C.I.D.</h3><ul>
-<li>Atomicity（原子性）：一个事务（transaction）中的所有操作，或者全部完成，或者全部不完成，不会结束在中间某个环节。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。即，事务不可分割、不可约简。</li>
-<li>Consistency（一致性）：在事务开始之前和事务结束以后，数据库的完整性没有被破坏。这表示写入的资料必须完全符合所有的预设约束、触发器、级联回滚等。</li>
-<li>Isolation（隔离性）：数据库允许多个并发事务同时对其数据进行读写和修改的能力，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据的不一致。事务隔离分为不同级别，包括未提交读（Read uncommitted）、提交读（read committed）、可重复读（repeatable read）和串行化（Serializable）。</li>
-<li>Durability（持久性）：事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>出现的问题</th>
-<th>原因</th>
-<th>解决</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>脏读</td>
-<td>读取了其他事务未提交的数据, 导致数据错误.</td>
-<td>改为提交读. —— 只能读取事务提交后的数据.</td>
-</tr>
-<tr>
-<td>不可重复读</td>
-<td>一个对同一数据的两次查询之间, 另一个事务做出了修改, 导致前后不一致.</td>
-<td>改为可重复读. —— 使用 X, S锁.</td>
-</tr>
-<tr>
-<td>幻读</td>
-<td>查询结果为多个记录的时候, 前后两次这样的查询之间, 插入了新的记录, 导致前后结果不一致</td>
-<td>串行化 或 Next-Key Lock</td>
-</tr>
-<tr>
-<td>更新丢失</td>
-<td>两个事务同时对同一个数据进行更新操作, 其中在read-and-write阻塞, 尽管加S, X锁仍然导致错误.</td>
-<td>串行化.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p>更新丢失出现, 有可能并非事务隔离能避免的.</p>
-<p>例如现在两个程序端, 同时对同一个人取款. 初始1000, 事务一取 100块, 事务二取 1 块.</p>
-<p>共计取了101, 应该为899元, 结果却为999元.</p>
-<p>串行化可以解决此类问题.</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line">participant transactionI</span><br><span class="line">participant transactionII</span><br><span class="line">participant row</span><br><span class="line">transactionI -&gt;&gt; row: lock S-Lock, query 1000</span><br><span class="line">transactionII -&gt;&gt; row: lock S-Lock, query 1000</span><br><span class="line">transactionI -&gt;&gt; row: unlock S-Lock</span><br><span class="line">transactionII -&gt;&gt; row: unlock S-Lock</span><br><span class="line">transactionI -&gt;&gt; transactionI: 1000 - 100 = 900</span><br><span class="line">transactionII -&gt;&gt; transactionII: 1000 - 1 = 999</span><br><span class="line">transactionI -&gt;&gt; row: lock X-Lock</span><br><span class="line">transactionII -&gt;&gt; row: lock X-Lock</span><br><span class="line">row --&gt;&gt; transactionII: block</span><br><span class="line">transactionI -&gt;&gt; row: update row = 900</span><br><span class="line">transactionI -&gt;&gt; row: unlock X-Lock</span><br><span class="line">row --&gt;&gt; transactionII: awake</span><br><span class="line">transactionII -&gt;&gt; row: update row = 999</span><br><span class="line">transactionII -&gt;&gt; row: unlock X-Lock</span><br></pre></td></tr></table></figure>
-<h4 id="事务分类"><a href="#事务分类" class="headerlink" title="事务分类"></a>事务分类</h4><ul>
-<li><p>扁平事务</p>
-</li>
-<li><p>带保存点的扁平事务</p>
-</li>
-<li><p>链事务</p>
-</li>
-<li><p>嵌套事务</p>
-</li>
-</ul>
-<h4 id="事务陷阱"><a href="#事务陷阱" class="headerlink" title="事务陷阱"></a>事务陷阱</h4><ul>
-<li>自动回滚 —— 自动回滚不会抛出异常, 无法知道异常. (SQL Server 会抛出异常, 这个是MySQL特有的缺点)</li>
-<li>自动提交.</li>
-<li>在循环中提交 —— 意外导致在未知位置终止, 无法还原.</li>
-</ul>
-<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><h4 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h4><h5 id="共享锁-独占锁"><a href="#共享锁-独占锁" class="headerlink" title="共享锁, 独占锁"></a>共享锁, 独占锁</h5><ul>
-<li>允许多个事务读同一行.</li>
-<li>当事务对同一行进行写操作, 将阻塞其他所有事务的读、写操作.</li>
-</ul>
-<h4 id="行锁算法"><a href="#行锁算法" class="headerlink" title="行锁算法"></a>行锁算法</h4><h5 id="Record-Lock"><a href="#Record-Lock" class="headerlink" title="Record Lock"></a>Record Lock</h5><p>单一行锁.</p>
-<h5 id="Gap-Lock"><a href="#Gap-Lock" class="headerlink" title="Gap Lock"></a>Gap Lock</h5><p>锁定一个区间, 但是不包括该记录本身.</p>
-<h5 id="Next-Key-Lock"><a href="#Next-Key-Lock" class="headerlink" title="Next-Key Lock"></a>Next-Key Lock</h5><p>锁定该记录本身, 并且锁定包含它的一个范围.</p>
-<h4 id="粒度锁"><a href="#粒度锁" class="headerlink" title="粒度锁"></a>粒度锁</h4><h5 id="意向锁-树状锁"><a href="#意向锁-树状锁" class="headerlink" title="意向锁 :  树状锁"></a>意向锁 :  树状锁</h5><p>锁的结构呈树状, 粗粒度锁拥有几个粒度细的锁.</p>
-<p>叶子的粒度细, 父节点的粒度粗.</p>
-<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h3 id="索引的相关理论"><a href="#索引的相关理论" class="headerlink" title="索引的相关理论"></a>索引的相关理论</h3><h4 id="最左前缀匹配"><a href="#最左前缀匹配" class="headerlink" title="最左前缀匹配"></a>最左前缀匹配</h4><p>MySQL引擎采用最左前缀匹配的机制, 可以高效从左匹配.</p>
-<p>所以最左端是模糊查询的时候, 最左前缀匹配失效, 导致性能降低.</p>
-<h4 id="可选择性"><a href="#可选择性" class="headerlink" title="可选择性"></a>可选择性</h4><p>可选择性的意思是, 针对某一字段查询出的结果, 对于这个的分区度.(这一字段的重复程度)</p>
-<blockquote>
-<p>例如, 性别的区分度就很低: 根据某个性别查询出的结果, 性别的区分度及其低. </p>
-<p>再如, 年龄、城市的区分度稍稍高于性别的区分度.</p>
-<p>最高的区分度莫过于ID之类的字段. 其是唯一的, 所以它的可选择性及高.</p>
-</blockquote>
-<p>解决可选择性低的方法是, 将几个可选择性低的字段使用多列索引组合起来, 让其可区分度上升.</p>
-<h4 id="聚集索引-vs-辅助索引"><a href="#聚集索引-vs-辅助索引" class="headerlink" title="聚集索引 vs. 辅助索引"></a>聚集索引 vs. 辅助索引</h4><ul>
-<li>聚集索引: 也称主码索引, 使用主码建立的索引, 直接指向数据.</li>
-<li>辅助索引: 非主码索引, 该索引指向主码. 先用该索引定位主码, 再用主码定位数据.</li>
-</ul>
-<h3 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a>聚簇索引</h3><p>将某一列相同相近的记录排在一起, 进行索引.</p>
-<blockquote>
-<p>其提高了I/O密集型的性能, 相关数据保存在一起.</p>
-</blockquote>
-<h4 id="聚簇-vs-可选择性-——-UUID-vs-自增ID的选择及UUID的优化"><a href="#聚簇-vs-可选择性-——-UUID-vs-自增ID的选择及UUID的优化" class="headerlink" title="聚簇 vs 可选择性 —— UUID vs. 自增ID的选择及UUID的优化"></a>聚簇 vs 可选择性 —— UUID vs. 自增ID的选择及UUID的优化</h4><ul>
-<li>UUID应该使用UNHEX存储在Binary(16)中, 而不是用字符串存储.</li>
-<li>UUID的引入, 导致了索引的随机性大大增加, 索引占用空间变大.</li>
-<li>因为UUID是随机的,  每一页都是随机填充的, 导致页内碎片变多. 而且因为写入是乱序的, 导致频繁的页分裂.</li>
-<li>UUID是随机的, 导致大量的随机I/O, 性能大幅下降.</li>
-<li>自增ID会有自增锁, 频繁的锁也会导致阻塞. </li>
-<li>自增PK会成为热点数据, 并发插入导致<strong>间隙竞争</strong>可以考虑修改<code>innodb_autoinc_lock_mode</code> 进行优化.</li>
-</ul>
-<blockquote>
-<p> 折中方案:</p>
-<p>使用前缀顺序+后缀随机的组合式ID可以达到这两种极端的综合.</p>
-</blockquote>
-<h3 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h3><p>为了解决可选择性过低的问题, 多个选择性低的字段, 可用多列索引组合起来, 提高可选择性, 这就是多列索引.</p>
-<p>但是选择性高的字段组合起来, 会增加负担.</p>
-<blockquote>
-<p>例如有一些待查询的列: &lt;性别,  年龄, 城市&gt;</p>
-<ul>
-<li>性别的可选择性最低, 因为查询出的人性别无非就几种, 这列的查询结果重复度极高.</li>
-<li>其次, 年龄一般在0~99之间集中分布,  重复读虽然低于性别, 但是几十万的数据集中分布在0~99这个区间, 重复度也不低.</li>
-<li>同理, 城市的区分度高于前两者, 但是可选择性也是一般.</li>
-</ul>
-<p>此时, 可以建立一个多列索引, 将这三个可选择性低的列绑成一个多列索引, 可以大大提高可选择性.</p>
-</blockquote>
-<h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引***"></a>覆盖索引***</h3><blockquote>
-<p>如果一个索引覆盖了查询字段的所有值, 那么称其为覆盖索引.</p>
-</blockquote>
-<p>优点:</p>
-<ul>
-<li>索引条目少.</li>
-<li>索引按照列值存储, 使用顺序的磁盘I/O; 少次的顺序I/O比多次的随机I/O性能好.</li>
-</ul>
-<p><strong>索引失效情况</strong></p>
-<ul>
-<li>索引没有覆盖到查询列. —— <strong>使用延迟查询解决.</strong></li>
-<li>MySQL5.5 之后可以使用最左前缀匹配的Like查询, 但是非最左前缀匹配的模糊查询将使得索引失效.</li>
-<li>ORDER BY, GROUP BY所用的列未索引覆盖, 导致无法索引排序.</li>
-</ul>
-<h3 id="索引排序"><a href="#索引排序" class="headerlink" title="索引排序***"></a>索引排序***</h3><blockquote>
-<p>利用索引对数据进行排序.</p>
-</blockquote>
-<p>针对 ORDER BY和GROUP BY</p>
-<ul>
-<li>只有当查询的列顺序和排序的列顺序相同, 且排序方向相同(都是升序或都是降序), MySQL才会对其进行索引排序.</li>
-<li>关联多表的ORDER BY、GROUP BY引用的字段必须全部为首张表, 才会触发索引排序.</li>
-<li>必须满足最左前缀匹配.</li>
-<li>范围查询中的列与ORDER BY、GROUP BY中的列要一致, 才能出发索引排序.</li>
-</ul>
-<h3 id="冗余索引"><a href="#冗余索引" class="headerlink" title="冗余索引"></a>冗余索引</h3><blockquote>
-<p>若有索引$(A,B)$ 之后又出现了 索引$(A)$ , 则 $(A)$ 是$(A,B)$的索引.</p>
-<p>但$(A)$不是$(B,A)$ 的索引.</p>
-</blockquote>
-<p>因为索引多, 虽然查询快, 但是插入慢(需要维护索引的成本变高). 冗余、重复的索引会降低性能.</p>
-<h3 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h3><blockquote>
-<p>EXPLAIN中的extra字段可显示. 指检索数据的方式.</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>Extra</th>
-<th>意思</th>
-<th>可能出现的情况</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>using index</td>
-<td>使用索引</td>
-<td>覆盖索引, 高效.</td>
-</tr>
-<tr>
-<td>using where</td>
-<td>存储引擎收到记录后进行过滤</td>
-<td>索引未覆盖, 或部分覆盖.</td>
-</tr>
-<tr>
-<td>using condition</td>
-<td>使用条件</td>
-<td>查询会先条件过滤索引，过滤完索引后找到所有符合索引条件的数据行，<br>随后用 WHERE 子句中的其他条件去过滤这些数据行.</td>
-</tr>
-<tr>
-<td>using filesort</td>
-<td>使用文件排序</td>
-<td>无法利用索引完成的排序操作称为“文件排序”.</td>
-</tr>
-<tr>
-<td>using temporary</td>
-<td>使用临时表</td>
-<td>需要使用临时表来存储结果集，常见于排序和分组查询.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="三星索引"><a href="#三星索引" class="headerlink" title="三星索引"></a>三星索引</h3><table>
-<thead>
-<tr>
-<th>星级</th>
-<th>定义</th>
-<th>原理</th>
-<th>实现</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>🌟</td>
-<td>这个索引与一个查询相关的索引行是相邻的, 或者是相近的</td>
-<td>它最小化了必须扫描的索引片的宽度</td>
-<td>把 WHERE 后的等值条件列作为索引最开头的列</td>
-</tr>
-<tr>
-<td>🌟🌟</td>
-<td>索引行的顺序与查询语句的需求一致</td>
-<td>排除了排序操作</td>
-<td>ORDER BY的列都在索引中, 且与查询顺序一致</td>
-</tr>
-<tr>
-<td>🌟🌟🌟</td>
-<td>如果索引行中包含查询语句中的所有列</td>
-<td>覆盖索引</td>
-<td>实现覆盖索引</td>
-</tr>
-</tbody>
-</table>
-<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><blockquote>
-<p>查询变慢的原因包括但不限于:</p>
-<ul>
-<li>返回了过多的数据.</li>
-<li>返回了不需要的列.</li>
-</ul>
-</blockquote>
-<h3 id="扫描类型"><a href="#扫描类型" class="headerlink" title="扫描类型"></a>扫描类型</h3><blockquote>
-<p>使用EXPLAIN语句可以查看该查询的扫描类型, 在type字段. 指检索数据的集合.</p>
-<p>性能高低:</p>
-<p>常数引用  &gt; 唯一索引查询 &gt; 范围扫描 &gt; 索引扫描 &gt; 全表扫描</p>
-</blockquote>
-<p>扫描类型</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">类型</th>
-<th style="text-align:center">名称</th>
-<th>成因</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">ALL</td>
-<td style="text-align:center">全表扫描</td>
-<td>查询扫描了全部整个表, 性能最低</td>
-</tr>
-<tr>
-<td style="text-align:center">index</td>
-<td style="text-align:center">索引全扫描</td>
-<td>查询扫描了整个索引</td>
-</tr>
-<tr>
-<td style="text-align:center">range</td>
-<td style="text-align:center">索引范围扫描</td>
-<td>是范围查询</td>
-</tr>
-<tr>
-<td style="text-align:center">ref</td>
-<td style="text-align:center">非唯一索引扫描</td>
-<td>非唯一索引或者使用了最左前缀匹配</td>
-</tr>
-<tr>
-<td style="text-align:center">eq_ref</td>
-<td style="text-align:center">唯一索引扫描</td>
-<td>一般出现在多表连接时使用primary key或者unique index作为关联条件</td>
-</tr>
-<tr>
-<td style="text-align:center">const,system</td>
-<td style="text-align:center">单表最多有一个匹配行</td>
-<td>出现在根据主键primary key, 或者唯一索引 unique index 进行的查询</td>
-</tr>
-<tr>
-<td style="text-align:center">NULL</td>
-<td style="text-align:center">不用扫描表或索引</td>
-<td>不用访问表或者索引，直接就能够得到结果</td>
-</tr>
-</tbody>
-</table>
-<h3 id="简单查询-vs-复杂查询"><a href="#简单查询-vs-复杂查询" class="headerlink" title="简单查询 vs. 复杂查询"></a>简单查询 vs. 复杂查询</h3><p>如果条件允许, 应该使用多个简单查询替代一个复杂查询. </p>
-<p>这样的查询结果很高效, 而且还能将查询结果缓存.</p>
-<h3 id="关联查询"><a href="#关联查询" class="headerlink" title="关联查询"></a>关联查询</h3><p>MySQL的关联查询是一个左长臂二叉树, 而不是AVL树. 大量的联合查询导致左子树呈现出线性的特征, 导致效率低下.</p>
-<p>需要避免过多的多表查询, 或者手动优化JOIN的方式, 使查询树的高度变低.</p>
-<p>​                   JOIN</p>
-<p>​                /          \</p>
-<p>​            JOIN     table4</p>
-<p>​          /        \</p>
-<p>​     JOIN     table3</p>
-<p>   /        \</p>
-<p>table1  table2</p>
-<h3 id="延迟关联"><a href="#延迟关联" class="headerlink" title="延迟关联"></a>延迟关联</h3><p>若在查询中有索引无法覆盖的列, 应该拆分出来成为一个子查询, 使用例如left outer/inner join进行连接后查询.</p>
-<blockquote>
-<p>例如:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SELECT id, description from tableA order by title limit 50,5; -- title没有索引覆盖</span><br><span class="line">&gt; -- 化为</span><br><span class="line">&gt; SELECT id, decription from tableA inner join (SELECT id from tableA order by title) as tmp USING(id); -- 缩小非索引覆盖的范围. 子查询只查pk.</span><br><span class="line">&gt; </span><br><span class="line">&gt; SELECT id, cu_id, name, info, biz_type, gmt_create, gmt_modified,start_time, end_time, market_type, back_leaf_category,item_status,picuture_url FROM relation where biz_type =&apos;0&apos; AND end_time &gt;=&apos;2014-05-29&apos; ORDER BY id asc LIMIT 149420 ,20;</span><br><span class="line">&gt; </span><br><span class="line">&gt; SELECT a.* FROM relation a, (select id from relation where biz_type =&apos;0&apos; AND end_time &gt;=&apos;2014-05-29&apos; ORDER BY id asc LIMIT 149420 ,20 ) b where using(id)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-</blockquote>
-<h3 id="可选择性-amp-WHERE的优化"><a href="#可选择性-amp-WHERE的优化" class="headerlink" title="可选择性 &amp; WHERE的优化"></a>可选择性 &amp; WHERE的优化</h3><ul>
-<li><p>可选择性高的列放在前查询, 查询结果基数降低, 可以提高性能.</p>
-</li>
-<li><p>所以, WHERE <strong>精确值查询</strong>{可选择性高, …, 可选择性低}  + <strong>范围查询</strong>{可选择性高(例如IN语句), &gt;&lt; !=,…, 可选择性低(区分度低的列)}</p>
-</li>
-<li><p>索引未覆盖的列应该进行拆分, 进行延迟关联.</p>
-</li>
-</ul>
-<h3 id="范围查询"><a href="#范围查询" class="headerlink" title="范围查询"></a>范围查询</h3><p>避免多个范围查询: MySQL无法同时使用两个范围查询的索引.</p>
-<p>使用IN()替代范围查询, 会提高效率.</p>
-<h3 id="IN-amp-EXIST"><a href="#IN-amp-EXIST" class="headerlink" title="IN() &amp; EXIST()"></a>IN() &amp; EXIST()</h3><ul>
-<li>EXITS的可以使得查询提前结束, 从而提高效率.</li>
-<li>使用IN效率高于比较符号. 但是IN的代价很高, IN()中的值最好不要过多. 因为IN()会对其内部的值进行一个全排列. 例如IN()中写了4个值, 那么其就要对这4个值做一个全排列$4! = 24$ , 可以看出, 这个代价是连乘积复杂度, IN()也并非银弹.</li>
-<li>OUTER JOIN的效率 &gt; EXITS的效率 &gt; INNER JOIN的效率.</li>
-</ul>
-<h3 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h3><ul>
-<li>由于MySQL引擎的原因, 子查询效果很差, 使用left outer join的方式替代, 可以提升性能.</li>
-<li>IN()中的子查询效率比EXIST()的子查询低很多, 最好别用IN子查询, 应该优先使用EXIST子查询. (MySQL查询引擎缺陷导致的问题)</li>
-</ul>
-<h3 id="UNION优化"><a href="#UNION优化" class="headerlink" title="UNION优化"></a>UNION优化</h3><ul>
-<li>order by / limit语句写在每个union的子查询中, 而不是最后再order by / limit.</li>
-</ul>
-<h3 id="LIMIT优化"><a href="#LIMIT优化" class="headerlink" title="LIMIT优化"></a>LIMIT优化</h3><ul>
-<li>延迟关联</li>
-<li><del>使用between and 语句代替比较符号.</del></li>
-</ul>
-<h2 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h2><blockquote>
-<p>分区也并非银弹.</p>
-</blockquote>
-<ul>
-<li>所有对分区的操作, 第一步都会锁住分区的底层表, 然后判定操作范围, 解锁操作范围之外的分区, 再做相应的操作,.</li>
-<li>B-Tree索引将失效.</li>
-<li>索引维护极高.</li>
-</ul>
-]]></content>
   </entry>
 </search>
